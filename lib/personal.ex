@@ -5,7 +5,7 @@ defmodule Personal do
   def post(assigns) do
     ~H"""
     <.layout>
-      <article class="prose">
+      <article class="prose lg:prose-xl">
         <h1><%= @post.title %></h1>
         <h2><%= @post.description %></h2>
         <h2><a href={@post.related_listening}>Related Listening</a></h2>

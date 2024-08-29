@@ -3,7 +3,7 @@
   author: "Andy LeClair",
   tags: ~w(hello),
   description: "The Start of Something",
-  related_listening: "<https://www.youtube.com/watch?v=wVrSXeRXSWE>"
+  related_listening: "https://www.youtube.com/watch?v=wVrSXeRXSWE"
 }
 ---
 

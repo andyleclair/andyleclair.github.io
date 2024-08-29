@@ -12,6 +12,31 @@
     opacity: 0;
   }
 }
+
+@font-face {
+  font-family: 'Server Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/assets/fonts/ServerMono-Regular.otf') format('opentype');
+  src: url('/assets/fonts/ServerMono-Regular.woff') format('woff');
+  src: url('/assets/fonts/ServerMono-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Server Mono';
+  font-style: italic;
+  font-weight: 400;
+  src: url('/assets/fonts/ServerMono-Regular-Italic.otf') format('opentype');
+  src: url('/assets/fonts/ServerMono-Regular-Italic.woff') format('woff');
+  src: url('/assets/fonts/ServerMono-Regular-Italic.woff2') format('woff2');
+}
+
+body {
+  font-family: 'Server Mono', monospace;
+  font-size: 1rem;
+}
+
+
 /* Makeup */
 .makeup .hll {background-color: #4f424c}
 .makeup {color: #e7e9db; background-color: #2f1e2e}.makeup .unselectable {

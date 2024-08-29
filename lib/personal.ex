@@ -7,8 +7,8 @@ defmodule Personal do
     <.layout>
       <article class="prose lg:prose-xl">
         <h1><%= @post.title %></h1>
-        <h2><%= @post.description %></h2>
-        <h2><a href={@post.related_listening}>Related Listening</a></h2>
+        <h3><%= @post.description %></h3>
+        <h3><a href={@post.related_listening}>Related Listening</a></h3>
         <p class="text-smurf-blood">Posted on <%= @post.date %></p>
         <%= raw(@post.body) %>
       </article>
@@ -19,7 +19,7 @@ defmodule Personal do
   def index(assigns) do
     ~H"""
     <.layout>
-      <h2>Posts!</h2>
+      <h2 class="text-xl">Blog!</h2>
       <ul>
         <li :for={post <- @posts}>
           <%= post.date %> - <a href={post.path}><%= post.title %></a>
@@ -41,7 +41,7 @@ defmodule Personal do
 
       <body class="bg-nor-easter text-smurf-blood">
         <div class="flex h-60 min-h-screen flex-col items-center">
-          <header class="bg-bludacris p-4">
+          <header class="bg-bludacris p-10 my-4 lg:mt-10 lg:mb-14">
             <h1>andy@andyleclair.dev$><span class="blink">_</span></h1>
           </header>
           <main class="h-96 flex-1 p-4">
@@ -60,8 +60,6 @@ defmodule Personal do
   def build() do
     posts = Personal.Blog.all_posts()
 
-    IO.inspect(posts)
-
     render_file("index.html", index(%{posts: posts}))
 
     for post <- posts do
@@ -74,7 +72,16 @@ defmodule Personal do
       render_file(post.path, post(%{post: post}))
     end
 
+    copy_static()
+
     :ok
+  end
+
+  @font_dir "./assets/fonts"
+  @image_dir "./assets/images"
+  def copy_static() do
+    File.cp_r!(@font_dir, Path.join([@output_dir, "assets", "fonts"]))
+    File.cp_r!(@image_dir, Path.join([@output_dir, "assets", "images"]))
   end
 
   def render_file(path, rendered) do

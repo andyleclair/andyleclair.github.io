@@ -3,7 +3,7 @@
   author: "Andy LeClair",
   tags: ~w(hello),
   description: "About this site",
-  related_listening: "<https://www.youtube.com/watch?v=9q4mVEcedSo>"
+  related_listening: "https://www.youtube.com/watch?v=9q4mVEcedSo"
 }
 ---
 
@@ -19,3 +19,5 @@ rip off some other static site generator, this particular wheel has been
 reinvented several times, and who am I to buck tradition?
 
 I've deployed this site to Github Pages -- [source here!](https://github.com/andyleclair/andyleclair.github.io/)
+
+Font is [Server Mono](https://servermono.com/). CSS is [Tailwind](https://tailwindcss.com/).

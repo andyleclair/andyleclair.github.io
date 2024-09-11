@@ -12,11 +12,12 @@ module.exports = {
         'pink-power-ranger': '#FF5290',
         'smurf-blood': '#0B1A38',
         'nor-easter': '#F5F7FA',
-        'grapefruit': '#FF8389'
+        'grapefruit': '#FF8389',
+        'codebg': '#2f1e2e'
       },
       boxShadow: {
         'DEFAULT': '10px 10px 0 #20E0D6',
-      }
+      },
     },
   },
 

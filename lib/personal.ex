@@ -5,7 +5,7 @@ defmodule Personal do
   def post(assigns) do
     ~H"""
     <.layout>
-      <article class="prose lg:prose-xl">
+      <article class="prose lg:prose-xl prose-pre:bg-codebg">
         <h1><%= @post.title %></h1>
         <h3><%= @post.description %></h3>
         <h3><a href={@post.related_listening}>Related Listening</a></h3>
@@ -44,7 +44,7 @@ defmodule Personal do
           <header class="bg-bludacris p-10 my-4 lg:mt-10 lg:mb-14">
             <h1>andy@andyleclair.dev$><span class="blink">_</span></h1>
           </header>
-          <main class="h-96 flex-1 p-4">
+          <main class="relative grow min-h-96 flex-1 p-4">
             <%= render_slot(@inner_block) %>
           </main>
           <footer class="bg-bludacris p-4 text-center">© Andy LeClair 2024</footer>

@@ -23,13 +23,14 @@ defmodule Personal.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:nimble_publisher, "~> 1.1.0"},
+      {:esbuild, "~> 0.5"},
       {:makeup_elixir, ">= 0.0.0"},
       {:makeup_erlang, ">= 0.0.0"},
+      {:nimble_publisher, "~> 1.1.0"},
       {:phoenix, "~> 1.7"},
       {:phoenix_live_view, "~> 0.20"},
-      {:esbuild, "~> 0.5"},
-      {:tailwind, "~> 0.2"}
+      {:tailwind, "~> 0.2"},
+      {:tzdata, "~> 1.1"}
     ]
   end
 

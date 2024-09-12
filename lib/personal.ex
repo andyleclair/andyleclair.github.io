@@ -5,6 +5,10 @@ defmodule Personal do
   def post(assigns) do
     ~H"""
     <.layout>
+      <:head>
+        <title><%= @post.title %></title>
+        <meta name="description" content={@post.description} />
+      </:head>
       <article class="prose lg:prose-xl prose-pre:bg-codebg">
         <h1><%= @post.title %></h1>
         <h3><%= @post.description %></h3>
@@ -19,6 +23,10 @@ defmodule Personal do
   def index(assigns) do
     ~H"""
     <.layout>
+      <:head>
+        <title>andyleclair.dev</title>
+        <meta name="description" content="Personal website of Andy LeClair" />
+      </:head>
       <h2 class="text-xl">Blog!</h2>
       <ul>
         <li :for={post <- @posts}>
@@ -29,14 +37,18 @@ defmodule Personal do
     """
   end
 
+  slot :head
+
   def layout(assigns) do
     ~H"""
     <!doctype html>
     <html>
       <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/assets/app.css" />
         <script type="text/javascript" src="/assets/app.js" />
+        <%= render_slot(@head) %>
       </head>
 
       <body class="bg-nor-easter text-smurf-blood">

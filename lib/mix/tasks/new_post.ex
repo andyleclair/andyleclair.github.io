@@ -4,10 +4,6 @@ defmodule Mix.Tasks.NewPost do
   def run(_args) do
     Application.ensure_all_started(:personal)
 
-    {:ok, now} = DateTime.now("America/New_York")
-    today = DateTime.to_date(now)
-    date_path_fragment = Calendar.strftime(today, "%Y/%m-%d")
-
     title = get_title()
     url = title |> String.downcase() |> String.replace("'", "") |> String.replace(~r/\W+/, "-")
     tags = get_tags()
@@ -27,7 +23,7 @@ defmodule Mix.Tasks.NewPost do
 
     """
 
-    path = "posts/#{date_path_fragment}-#{url}.md"
+    path = "drafts/#{url}.md"
 
     File.write(path, post_body)
 

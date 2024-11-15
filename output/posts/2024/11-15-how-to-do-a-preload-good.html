@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/app.css">
+    <script type="text/javascript" src="/assets/app.js"></script>
+    
+    <title>How To Do A Preload Good</title>
+    <meta name="description" content="Avoiding N+1 queries with Ecto&#39;s preload">
+  
+  </head>
+
+  <body class="bg-nor-easter text-smurf-blood">
+    <div class="flex h-60 min-h-screen flex-col items-center">
+      <header class="bg-bludacris p-10 my-4 lg:mt-10 lg:mb-14">
+        <h1>andy@andyleclair.dev$><span class="blink">_</span></h1>
+      </header>
+      <main class="relative grow min-h-96 flex-1 p-4">
+        
+  <article class="prose lg:prose-xl prose-pre:bg-codebg">
+    <h1>How To Do A Preload Good</h1>
+    <h3>Avoiding N+1 queries with Ecto&#39;s preload</h3>
+    <h3><a href="https://www.youtube.com/watch?v=nhWlJLP6QyM">Related Listening</a></h3>
+    <p class="text-smurf-blood">Posted on 2024-11-15</p>
+    <p>
+I recently had <a href="https://twitter.com/andyleclair/status/1857112936101134588">this exchange</a> on Twitter about using Ecto’s <code class="inline">Repo.preload</code> and I wanted to describe
+the way that we handle this at Appcues. Obviously everyone has their opinions, but this has served us very well for years, and we’ve never posted anything about it!</p>
+<p>
+Hopefully this can help somebody out there.</p>
+<h2>
+The Problem</h2>
+<p>
+So, if you do something like <code class="inline">Repo.get(queryable) |&gt; Repo.preload(:association)</code>, you’re going to get a query for the original record, and then a query for each of the associated records. This is the classic N+1 query problem, and it’s not good.</p>
+<p>
+How do you solve it? More functions!</p>
+<h2>
+The Solution</h2>
+<pre><code class="makeup elixir"><span class="kd">def</span><span class="w"> </span><span class="nf">get_thing</span><span class="p" data-group-id="7940493633-1">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">opts</span><span class="w"> </span><span class="o">\\</span><span class="w"> </span><span class="p" data-group-id="7940493633-2">[</span><span class="p" data-group-id="7940493633-2">]</span><span class="p" data-group-id="7940493633-1">)</span><span class="w"> </span><span class="k" data-group-id="7940493633-3">do</span><span class="w">
+  </span><span class="n">from</span><span class="p" data-group-id="7940493633-4">(</span><span class="n">t</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nc">Thing</span><span class="p">,</span><span class="w"> </span><span class="ss">where</span><span class="p">:</span><span class="w"> </span><span class="n">t</span><span class="o">.</span><span class="n">id</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">^</span><span class="n">id</span><span class="p" data-group-id="7940493633-4">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">preload</span><span class="p" data-group-id="7940493633-5">(</span><span class="n">opts</span><span class="p" data-group-id="7940493633-6">[</span><span class="ss">:preload</span><span class="p" data-group-id="7940493633-6">]</span><span class="p" data-group-id="7940493633-5">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Repo</span><span class="o">.</span><span class="n">one</span><span class="p" data-group-id="7940493633-7">(</span><span class="n">query</span><span class="p" data-group-id="7940493633-7">)</span><span class="w">
+</span><span class="k" data-group-id="7940493633-3">end</span><span class="w">
+
+</span><span class="kd">def</span><span class="w"> </span><span class="nf">preload</span><span class="p" data-group-id="7940493633-8">(</span><span class="n">query</span><span class="p" data-group-id="7940493633-8">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="n">preload</span><span class="p" data-group-id="7940493633-9">(</span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="no">true</span><span class="p" data-group-id="7940493633-9">)</span><span class="w">
+</span><span class="kd">def</span><span class="w"> </span><span class="nf">preload</span><span class="p" data-group-id="7940493633-10">(</span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="no">nil</span><span class="p" data-group-id="7940493633-10">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="n">query</span><span class="w">
+
+</span><span class="kd">def</span><span class="w"> </span><span class="nf">preload</span><span class="p" data-group-id="7940493633-11">(</span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="no">true</span><span class="p" data-group-id="7940493633-11">)</span><span class="w"> </span><span class="k" data-group-id="7940493633-12">do</span><span class="w">
+  </span><span class="n">from</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="ss">preload</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="7940493633-13">[</span><span class="w">
+    </span><span class="ss">:association</span><span class="p">,</span><span class="w">
+    </span><span class="ss">other_assoc</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="7940493633-14">[</span><span class="ss">:sub_assoc</span><span class="p" data-group-id="7940493633-14">]</span><span class="w">
+  </span><span class="p" data-group-id="7940493633-13">]</span><span class="w">
+</span><span class="k" data-group-id="7940493633-12">end</span><span class="w">
+
+</span><span class="kd">def</span><span class="w"> </span><span class="nf">preload</span><span class="p" data-group-id="7940493633-15">(</span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="n">preloads</span><span class="p" data-group-id="7940493633-15">)</span><span class="w"> </span><span class="k" data-group-id="7940493633-16">do</span><span class="w">
+  </span><span class="n">from</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="ss">preload</span><span class="p">:</span><span class="w"> </span><span class="o">^</span><span class="n">preloads</span><span class="w">
+</span><span class="k" data-group-id="7940493633-16">end</span></code></pre>
+<p>
+If you need to get fancier with it, you can also use a <code class="inline">left_join</code> and get more specific with your preload conditions.
+This will allow you to do things like adjust the query based on the associations, like if you’d need to sort based on
+say, the index of the association.</p>
+<pre><code class="makeup elixir"><span class="kd">def</span><span class="w"> </span><span class="nf">preload</span><span class="p" data-group-id="8303111550-1">(</span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="no">true</span><span class="p" data-group-id="8303111550-1">)</span><span class="w"> </span><span class="k" data-group-id="8303111550-2">do</span><span class="w">
+  </span><span class="n">from</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">query</span><span class="p">,</span><span class="w"> 
+    </span><span class="ss">left_join</span><span class="p">:</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">assoc</span><span class="p" data-group-id="8303111550-3">(</span><span class="n">q</span><span class="p">,</span><span class="w"> </span><span class="ss">:thing</span><span class="p" data-group-id="8303111550-3">)</span><span class="p">,</span><span class="w">
+    </span><span class="ss">left_join</span><span class="p">:</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">assoc</span><span class="p" data-group-id="8303111550-4">(</span><span class="n">t</span><span class="p">,</span><span class="w"> </span><span class="ss">:sub_thing</span><span class="p" data-group-id="8303111550-4">)</span><span class="p">,</span><span class="w">
+    </span><span class="ss">preload</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="8303111550-5">[</span><span class="w">
+      </span><span class="ss">thing</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="8303111550-6">{</span><span class="n">t</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8303111550-7">[</span><span class="ss">sub_thing</span><span class="p">:</span><span class="w"> </span><span class="n">s</span><span class="p" data-group-id="8303111550-7">]</span><span class="p" data-group-id="8303111550-6">}</span><span class="w">
+    </span><span class="p" data-group-id="8303111550-5">]</span><span class="p">,</span><span class="w">
+    </span><span class="ss">order_by</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="8303111550-8">[</span><span class="ss">asc</span><span class="p">:</span><span class="w"> </span><span class="n">t</span><span class="o">.</span><span class="n">index</span><span class="p" data-group-id="8303111550-8">]</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span><span class="k" data-group-id="8303111550-2">end</span></code></pre>
+<p>
+That’s the basic gist of it. I hope this helps someone out there!</p>
+
+  </article>
+
+      </main>
+      <footer class="bg-bludacris p-4 text-center">© Andy LeClair 2024</footer>
+    </div>
+  </body>
+</html>

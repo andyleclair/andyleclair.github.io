@@ -18,37 +18,18 @@ So, if you do something like `Repo.get(queryable) |> Repo.preload(:association)`
 
 How do you solve it? More functions!
 
-
 ## The Solution
-
 ```elixir
 def get_thing(id, opts \\ []) do
   from(t in Thing, where: t.id == ^id)
   |> preload(opts[:preload])
-  |> Repo.one(query)
+  |> Repo.one()
 end
 
-def preload(query), do: preload(query, true)
-def preload(query, nil), do: query
+defp preload(query), do: preload(query, true)
+defp preload(query, nil), do: query
 
-def preload(query, true) do
-  from q in query, preload: [
-    :association,
-    other_assoc: [:sub_assoc]
-  ]
-end
-
-def preload(query, preloads) do
-  from q in query, preload: ^preloads
-end
-```
-
-If you need to get fancier with it, you can also use a `left_join` and get more specific with your preload conditions.
-This will allow you to do things like adjust the query based on the associations, like if you'd need to sort based on
-say, the index of the association.
-
-```elixir
-def preload(query, true) do
+defp preload(query, true) do
   from q in query, 
     left_join: t in assoc(q, :thing),
     left_join: s in assoc(t, :sub_thing),
@@ -58,5 +39,28 @@ def preload(query, true) do
     order_by: [asc: t.index]
 ]
 end
+
+defp preload(query, preloads) do
+  from q in query, preload: ^preloads
+end
 ```
-That's the basic gist of it. I hope this helps someone out there!
+Edit: I made a mistake here originally. Thanks to [@AtomKirk](https://twitter.com/atomkirk) for pointing it out!
+
+What I had originally was:
+```elixir
+def preload(query, true) do
+  from q in query, preload: [
+    :association,
+    other_assoc: [:sub_assoc]
+  ]
+end
+```
+
+However, this is incorrect. The correct way to do this is to use the `left_join` with `assoc` functions.
+
+What I described originally was how [Ash](https://ash-hq.org/) does it. In Ash, you'd do something like:
+```elixir
+Ash.get!(Thing, id, load: [:association, other_assoc: [:sub_assoc]])
+```
+
+For a more explicit example, check out [this code here](https://github.com/andyleclair/garage/blob/main/lib/garage_web/live/builds_live/show.ex#L197)

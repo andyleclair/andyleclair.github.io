@@ -19,7 +19,7 @@ defmodule Mix.Tasks.Rss do
         <title>andyleclair.dev</title>
         <description>Personal blog of Andy LeClair</description>
         <link>#{url()}</link>
-        <atom:link href="#{url("rss.xml")}" rel="self" type="application/rss+xml" />
+        <atom:link href="#{url("feed.xml")}" rel="self" type="application/rss+xml" />
         #{items}
       </channel>
     </rss>

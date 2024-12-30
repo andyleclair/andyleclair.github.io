@@ -2,6 +2,8 @@ defmodule Personal do
   use Phoenix.Component
   import Phoenix.HTML
 
+  @site_url Application.compile_env(:personal, :root_url)
+
   def post(assigns) do
     ~H"""
     <.layout>
@@ -59,7 +61,9 @@ defmodule Personal do
           <main class="relative grow min-h-96 flex-1 p-4">
             <%= render_slot(@inner_block) %>
           </main>
-          <footer class="bg-bludacris p-4 text-center">© Andy LeClair 2024</footer>
+          <footer class="bg-bludacris p-4 text-center">
+            © Andy LeClair 2024 | <a href="/atom.xml">Atom</a> | <a href="/feed.xml">RSS</a>
+          </footer>
         </div>
       </body>
     </html>
@@ -84,21 +88,27 @@ defmodule Personal do
       render_file(post.path, post(%{post: post}))
     end
 
-    copy_static()
-
     :ok
-  end
-
-  @font_dir "./assets/fonts"
-  @image_dir "./assets/images"
-  def copy_static() do
-    File.cp_r!(@font_dir, Path.join([@output_dir, "assets", "fonts"]))
-    File.cp_r!(@image_dir, Path.join([@output_dir, "assets", "images"]))
   end
 
   def render_file(path, rendered) do
     safe = Phoenix.HTML.Safe.to_iodata(rendered)
     output = Path.join([@output_dir, path])
     File.write!(output, safe)
+  end
+
+  @doc """
+    Helper to return an absolute URL for a given path
+  """
+  def url(path \\ "") do
+    "#{@site_url}/#{path}"
+  end
+
+  def rfc_3339(date) do
+    Calendar.strftime(date, "%Y-%m-%dT00:00:00-05:00")
+  end
+
+  def rfc_822(date) do
+    Calendar.strftime(date, "%a, %d %b %Y 00:00:00 EST")
   end
 end

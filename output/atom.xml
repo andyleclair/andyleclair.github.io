@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>andyleclair.dev</title>
+  <link href="http://localhost:4000/" />
+  <link href="http://localhost:4000/atom.xml" rel="self" />
+  <updated>2024-12-30T00:00:00-05:00</updated>
+  <author>
+    <name>Andy LeClair</name>
+  </author>
+  <id>http://localhost:4000/</id>
+
+  <entry>
+  <title>Adding RSS to a static site</title>
+  <link href="http://localhost:4000/posts/2024/12-30-adding-rss-to-a-static-site.html" />
+  <id>http://localhost:4000/posts/2024/12-30-adding-rss-to-a-static-site.html</id>
+  <updated>2024-12-30T00:00:00-05:00</updated>
+  <summary>Adding RSS and Atom feeds to this site</summary>
+</entry>
+<entry>
+  <title>How To Do A Preload Good</title>
+  <link href="http://localhost:4000/posts/2024/11-15-how-to-do-a-preload-good.html" />
+  <id>http://localhost:4000/posts/2024/11-15-how-to-do-a-preload-good.html</id>
+  <updated>2024-11-15T00:00:00-05:00</updated>
+  <summary>Avoiding N+1 queries with Ecto's preload</summary>
+</entry>
+<entry>
+  <title>Live Fridge</title>
+  <link href="http://localhost:4000/posts/2024/10-28-live-fridge.html" />
+  <id>http://localhost:4000/posts/2024/10-28-live-fridge.html</id>
+  <updated>2024-10-28T00:00:00-05:00</updated>
+  <summary>My take on an internet fridge magnet poetry experience using Elixir, Ash, and LiveView.</summary>
+</entry>
+<entry>
+  <title>OpenGL Part 3</title>
+  <link href="http://localhost:4000/posts/2024/09-11-opengl-part-3.html" />
+  <id>http://localhost:4000/posts/2024/09-11-opengl-part-3.html</id>
+  <updated>2024-09-11T00:00:00-05:00</updated>
+  <summary>Layering shapes, displaying FPS</summary>
+</entry>
+<entry>
+  <title>OpenGL Part 2</title>
+  <link href="http://localhost:4000/posts/2024/09-10-opengl-part-2.html" />
+  <id>http://localhost:4000/posts/2024/09-10-opengl-part-2.html</id>
+  <updated>2024-09-10T00:00:00-05:00</updated>
+  <summary>Drawing a triangle</summary>
+</entry>
+<entry>
+  <title>GLtest</title>
+  <link href="http://localhost:4000/posts/2024/09-09-gltest.html" />
+  <id>http://localhost:4000/posts/2024/09-09-gltest.html</id>
+  <updated>2024-09-09T00:00:00-05:00</updated>
+  <summary>First steps with OpenGL in Elixir</summary>
+</entry>
+<entry>
+  <title>README</title>
+  <link href="http://localhost:4000/posts/2024/08-28-readme.html" />
+  <id>http://localhost:4000/posts/2024/08-28-readme.html</id>
+  <updated>2024-08-28T00:00:00-05:00</updated>
+  <summary>About this site</summary>
+</entry>
+<entry>
+  <title>Hello world!</title>
+  <link href="http://localhost:4000/posts/2024/08-27-hello-world.html" />
+  <id>http://localhost:4000/posts/2024/08-27-hello-world.html</id>
+  <updated>2024-08-27T00:00:00-05:00</updated>
+  <summary>The Start of Something</summary>
+</entry>
+
+</feed>

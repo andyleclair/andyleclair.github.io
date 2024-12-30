@@ -3,63 +3,63 @@
   <channel>
     <title>andyleclair.dev</title>
     <description>Personal blog of Andy LeClair</description>
-    <link>http://localhost:4000/</link>
-    <atom:link href="http://localhost:4000/rss.xml" rel="self" type="application/rss+xml" />
+    <link>https://andyleclair.dev/</link>
+    <atom:link href="https://andyleclair.dev/rss.xml" rel="self" type="application/rss+xml" />
     <item>
   <title>Adding RSS to a static site</title>
   <description>Adding RSS and Atom feeds to this site</description>
   <pubDate>Mon, 30 Dec 2024 00:00:00 EST</pubDate>
-  <link>http://localhost:4000/posts/2024/12-30-adding-rss-to-a-static-site.html</link>
-  <guid isPermaLink="true">http://localhost:4000/posts/2024/12-30-adding-rss-to-a-static-site.html</guid>
+  <link>https://andyleclair.dev/posts/2024/12-30-adding-rss-to-a-static-site.html</link>
+  <guid isPermaLink="true">https://andyleclair.dev/posts/2024/12-30-adding-rss-to-a-static-site.html</guid>
 </item>
 <item>
   <title>How To Do A Preload Good</title>
   <description>Avoiding N+1 queries with Ecto's preload</description>
   <pubDate>Fri, 15 Nov 2024 00:00:00 EST</pubDate>
-  <link>http://localhost:4000/posts/2024/11-15-how-to-do-a-preload-good.html</link>
-  <guid isPermaLink="true">http://localhost:4000/posts/2024/11-15-how-to-do-a-preload-good.html</guid>
+  <link>https://andyleclair.dev/posts/2024/11-15-how-to-do-a-preload-good.html</link>
+  <guid isPermaLink="true">https://andyleclair.dev/posts/2024/11-15-how-to-do-a-preload-good.html</guid>
 </item>
 <item>
   <title>Live Fridge</title>
   <description>My take on an internet fridge magnet poetry experience using Elixir, Ash, and LiveView.</description>
   <pubDate>Mon, 28 Oct 2024 00:00:00 EST</pubDate>
-  <link>http://localhost:4000/posts/2024/10-28-live-fridge.html</link>
-  <guid isPermaLink="true">http://localhost:4000/posts/2024/10-28-live-fridge.html</guid>
+  <link>https://andyleclair.dev/posts/2024/10-28-live-fridge.html</link>
+  <guid isPermaLink="true">https://andyleclair.dev/posts/2024/10-28-live-fridge.html</guid>
 </item>
 <item>
   <title>OpenGL Part 3</title>
   <description>Layering shapes, displaying FPS</description>
   <pubDate>Wed, 11 Sep 2024 00:00:00 EST</pubDate>
-  <link>http://localhost:4000/posts/2024/09-11-opengl-part-3.html</link>
-  <guid isPermaLink="true">http://localhost:4000/posts/2024/09-11-opengl-part-3.html</guid>
+  <link>https://andyleclair.dev/posts/2024/09-11-opengl-part-3.html</link>
+  <guid isPermaLink="true">https://andyleclair.dev/posts/2024/09-11-opengl-part-3.html</guid>
 </item>
 <item>
   <title>OpenGL Part 2</title>
   <description>Drawing a triangle</description>
   <pubDate>Tue, 10 Sep 2024 00:00:00 EST</pubDate>
-  <link>http://localhost:4000/posts/2024/09-10-opengl-part-2.html</link>
-  <guid isPermaLink="true">http://localhost:4000/posts/2024/09-10-opengl-part-2.html</guid>
+  <link>https://andyleclair.dev/posts/2024/09-10-opengl-part-2.html</link>
+  <guid isPermaLink="true">https://andyleclair.dev/posts/2024/09-10-opengl-part-2.html</guid>
 </item>
 <item>
   <title>GLtest</title>
   <description>First steps with OpenGL in Elixir</description>
   <pubDate>Mon, 09 Sep 2024 00:00:00 EST</pubDate>
-  <link>http://localhost:4000/posts/2024/09-09-gltest.html</link>
-  <guid isPermaLink="true">http://localhost:4000/posts/2024/09-09-gltest.html</guid>
+  <link>https://andyleclair.dev/posts/2024/09-09-gltest.html</link>
+  <guid isPermaLink="true">https://andyleclair.dev/posts/2024/09-09-gltest.html</guid>
 </item>
 <item>
   <title>README</title>
   <description>About this site</description>
   <pubDate>Wed, 28 Aug 2024 00:00:00 EST</pubDate>
-  <link>http://localhost:4000/posts/2024/08-28-readme.html</link>
-  <guid isPermaLink="true">http://localhost:4000/posts/2024/08-28-readme.html</guid>
+  <link>https://andyleclair.dev/posts/2024/08-28-readme.html</link>
+  <guid isPermaLink="true">https://andyleclair.dev/posts/2024/08-28-readme.html</guid>
 </item>
 <item>
   <title>Hello world!</title>
   <description>The Start of Something</description>
   <pubDate>Tue, 27 Aug 2024 00:00:00 EST</pubDate>
-  <link>http://localhost:4000/posts/2024/08-27-hello-world.html</link>
-  <guid isPermaLink="true">http://localhost:4000/posts/2024/08-27-hello-world.html</guid>
+  <link>https://andyleclair.dev/posts/2024/08-27-hello-world.html</link>
+  <guid isPermaLink="true">https://andyleclair.dev/posts/2024/08-27-hello-world.html</guid>
 </item>
 
   </channel>

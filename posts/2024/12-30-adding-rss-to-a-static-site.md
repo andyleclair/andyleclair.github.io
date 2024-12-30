@@ -17,3 +17,6 @@ I think it will also be the time I finally get around to having a real dev serve
 
 I'm going to push what I have so far and close the issue, but I'll be back with another post about getting fancy with the XML generation.
 
+Check out the PR [here](https://github.com/andyleclair/andyleclair.github.io/pull/2) to see what the code looks like. 
+```
+

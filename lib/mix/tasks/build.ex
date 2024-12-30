@@ -8,6 +8,6 @@ defmodule Mix.Tasks.Build do
       end)
 
     ms = micro / 1000
-    IO.puts("BUILT in #{ms}ms")
+    Mix.shell().info([:green, "Built site in #{ms}ms"])
   end
 end

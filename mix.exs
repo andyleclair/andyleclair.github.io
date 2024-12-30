@@ -28,7 +28,7 @@ defmodule Personal.MixProject do
       {:makeup_erlang, ">= 0.0.0"},
       {:nimble_publisher, "~> 1.1.0"},
       {:phoenix, "~> 1.7"},
-      {:phoenix_live_view, "~> 0.20"},
+      {:phoenix_live_view, "~> 1.0"},
       {:tailwind, "~> 0.2"},
       {:tzdata, "~> 1.1"}
     ]
@@ -36,7 +36,14 @@ defmodule Personal.MixProject do
 
   defp aliases() do
     [
-      "site.build": ["build", "tailwind default --minify", "esbuild default --minify"]
+      "site.build": [
+        "build",
+        "rss",
+        "atom",
+        "copy_static",
+        "tailwind default --minify",
+        "esbuild default --minify"
+      ]
     ]
   end
 end

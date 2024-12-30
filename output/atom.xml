@@ -3,13 +3,20 @@
   <title>andyleclair.dev</title>
   <link href="http://localhost:4000/" />
   <link href="http://localhost:4000/atom.xml" rel="self" />
-  <updated>2024-11-15T00:00:00-05:00</updated>
+  <updated>2024-12-30T00:00:00-05:00</updated>
   <author>
     <name>Andy LeClair</name>
   </author>
   <id>http://localhost:4000/</id>
 
   <entry>
+  <title>Adding RSS to a static site</title>
+  <link href="http://localhost:4000/posts/2024/12-30-adding-rss-to-a-static-site.html" />
+  <id>http://localhost:4000/posts/2024/12-30-adding-rss-to-a-static-site.html</id>
+  <updated>2024-12-30T00:00:00-05:00</updated>
+  <summary>Adding RSS and Atom feeds to this site</summary>
+</entry>
+<entry>
   <title>How To Do A Preload Good</title>
   <link href="http://localhost:4000/posts/2024/11-15-how-to-do-a-preload-good.html" />
   <id>http://localhost:4000/posts/2024/11-15-how-to-do-a-preload-good.html</id>

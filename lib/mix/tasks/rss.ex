@@ -3,9 +3,6 @@ defmodule Mix.Tasks.Rss do
   alias Personal.Blog
   import Personal
 
-  use Phoenix.Component
-  import Phoenix.HTML
-
   @destination "output/feed.xml"
 
   @impl Mix.Task

@@ -32,12 +32,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Set up Elixir to build the app
+      # Set up Elixir to build the app + install deps
       - name: Setup Elixir
         uses: erlef/setup-beam@v1
         with:
           otp-version: 27.1.1
           elixir-version: 1.18.0
+      - run: mix deps.get
       # Build the site
       - run: mix site.build
       - name: Setup Pages

@@ -31,6 +31,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      # Set up Elixir to build the app
+      - name: Setup Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: 27.1.1
+          elixir-version: 1.18.0
+      # Build the site
+      - run: mix site.build
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

@@ -38,6 +38,16 @@ jobs:
         with:
           otp-version: 27.1.1
           elixir-version: 1.18.0
+      # Set cache up
+      - uses: actions/cache@v4
+        id: cache
+        with:
+          path: |
+            deps
+            _build
+          key: v1-${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}-${{ hashFiles('**/.tool-versions') }}
+          restore-keys: |
+            v1-${{ runner.os }}-mix-
       - run: mix deps.get
       # Build the site
       - run: mix site.build

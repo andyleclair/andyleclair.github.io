@@ -127,4 +127,4 @@ end
 
 That's it! Now I can run `iex -S mix` and have a dev server that watches the filesystem for changes.
 
-Feel free to check out the PR [here]()
+Feel free to check out the PR [here](https://github.com/andyleclair/andyleclair.github.io/pull/3)

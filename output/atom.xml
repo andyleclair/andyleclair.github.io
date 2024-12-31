@@ -3,13 +3,20 @@
   <title>andyleclair.dev</title>
   <link href="https://andyleclair.dev/" />
   <link href="https://andyleclair.dev/atom.xml" rel="self" />
-  <updated>2024-12-30T00:00:00-05:00</updated>
+  <updated>2024-12-31T00:00:00-05:00</updated>
   <author>
     <name>Andy LeClair</name>
   </author>
   <id>https://andyleclair.dev/</id>
 
   <entry>
+  <title>Dev Server</title>
+  <link href="https://andyleclair.dev/posts/2024/12-31-dev-server.html" />
+  <id>https://andyleclair.dev/posts/2024/12-31-dev-server.html</id>
+  <updated>2024-12-31T00:00:00-05:00</updated>
+  <summary>Adding a development server</summary>
+</entry>
+<entry>
   <title>Adding RSS to a static site</title>
   <link href="https://andyleclair.dev/posts/2024/12-30-adding-rss-to-a-static-site.html" />
   <id>https://andyleclair.dev/posts/2024/12-30-adding-rss-to-a-static-site.html</id>

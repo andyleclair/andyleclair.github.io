@@ -8,8 +8,8 @@ defmodule Personal.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Starts a worker by calling: Personal.Worker.start_link(arg)
-      # {Personal.Worker, arg}
+      {Bandit, plug: Personal.DevServer},
+      {Personal.Watcher, dirs: ["./lib", "./posts"]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

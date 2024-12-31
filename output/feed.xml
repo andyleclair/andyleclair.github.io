@@ -6,6 +6,13 @@
     <link>https://andyleclair.dev/</link>
     <atom:link href="https://andyleclair.dev/feed.xml" rel="self" type="application/rss+xml" />
     <item>
+  <title>Dev Server</title>
+  <description>Adding a development server</description>
+  <pubDate>Tue, 31 Dec 2024 00:00:00 EST</pubDate>
+  <link>https://andyleclair.dev/posts/2024/12-31-dev-server.html</link>
+  <guid isPermaLink="true">https://andyleclair.dev/posts/2024/12-31-dev-server.html</guid>
+</item>
+<item>
   <title>Adding RSS to a static site</title>
   <description>Adding RSS and Atom feeds to this site</description>
   <pubDate>Mon, 30 Dec 2024 00:00:00 EST</pubDate>

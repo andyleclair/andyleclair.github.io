@@ -28,9 +28,12 @@ defmodule Personal.MixProject do
       {:makeup_erlang, ">= 0.0.0"},
       {:nimble_publisher, "~> 1.1.0"},
       {:phoenix, "~> 1.7"},
+      {:bandit, "~> 1.0"},
       {:phoenix_live_view, "~> 1.0"},
       {:tailwind, "~> 0.2"},
-      {:tzdata, "~> 1.1"}
+      {:tzdata, "~> 1.1"},
+      {:plug_static_index_html, "~> 1.0"},
+      {:file_system, "~> 1.0", only: :dev}
     ]
   end
 

@@ -56,12 +56,12 @@ defmodule Personal do
       <body class="bg-nor-easter text-smurf-blood">
         <div class="flex h-60 min-h-screen flex-col items-center">
           <header class="bg-bludacris p-10 my-4 lg:mt-10 lg:mb-14">
-            <h1>andy@andyleclair.dev$><span class="blink">_</span></h1>
+            <h1><a href={url()}>andy@andyleclair.dev</a>$><span class="blink">_</span></h1>
           </header>
           <main class="relative grow min-h-96 flex-1 p-4">
             <%= render_slot(@inner_block) %>
           </main>
-          <footer class="mt-10 bg-bludacris p-4 text-center">
+          <footer class="mt-24 bg-bludacris p-4 text-center">
             © Andy LeClair 2024 | <a href="/atom.xml">Atom</a> | <a href="/feed.xml">RSS</a>
           </footer>
         </div>

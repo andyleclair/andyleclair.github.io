@@ -1,5 +1,6 @@
 defmodule Mix.Tasks.Build do
   use Mix.Task
+
   @impl Mix.Task
   def run(_args) do
     {micro, :ok} =

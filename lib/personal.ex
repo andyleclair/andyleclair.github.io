@@ -58,7 +58,7 @@ defmodule Personal do
           <header class="bg-bludacris p-10 my-4 lg:mt-10 lg:mb-14">
             <h1><a href={url()}>andy@andyleclair.dev</a>$><span class="blink">_</span></h1>
           </header>
-          <main class="relative grow min-h-96 flex-1 p-4">
+          <main class="w-full relative grow min-h-96 flex-1 p-4">
             <%= render_slot(@inner_block) %>
           </main>
           <footer class="mt-24 bg-bludacris p-4 text-center">

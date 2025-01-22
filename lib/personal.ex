@@ -11,7 +11,7 @@ defmodule Personal do
         <title><%= @post.title %></title>
         <meta name="description" content={@post.description} />
       </:head>
-      <article class="prose lg:prose-xl prose-pre:bg-codebg">
+      <article class="mx-auto prose sm:prose-sm md:prose-md lg:prose-xl prose-pre:bg-codebg">
         <h1><%= @post.title %></h1>
         <h3><%= @post.description %></h3>
         <h3><a href={@post.related_listening}>Related Listening</a></h3>
@@ -58,7 +58,7 @@ defmodule Personal do
           <header class="bg-bludacris p-10 my-4 lg:mt-10 lg:mb-14">
             <h1><a href={url()}>andy@andyleclair.dev</a>$><span class="blink">_</span></h1>
           </header>
-          <main class="relative grow min-h-96 flex-1 p-4">
+          <main class="container mx-auto relative grow min-h-96 flex-1 p-4 items-center">
             <%= render_slot(@inner_block) %>
           </main>
           <footer class="mt-24 bg-bludacris p-4 text-center">

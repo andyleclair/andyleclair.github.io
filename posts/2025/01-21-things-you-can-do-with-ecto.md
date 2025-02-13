@@ -153,7 +153,7 @@ If you work with analytical queries at all, you will probably encounter a CTE. T
 
 ### You can pass `with_cte` a string!
 
-The docs for [with_cte](https://hexdocs.pm/ecto/Ecto.Query.html#with_cte) don't say you can do this, but you can just name your CTE parts directly, with a string. This is a version
+The docs for [with_cte](https://hexdocs.pm/ecto/Ecto.Query.html#with_cte/3) don't say you can do this, but you can just name your CTE parts directly, with a string. This is a version
 of the query from above, but using a CTE. Let's make it a little more interesting of a query, and say we also need to go get the latest event for each of those users in order to sort the data and return the latest timestamp.
 
 ```elixir

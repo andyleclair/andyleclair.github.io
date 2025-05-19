@@ -27,7 +27,7 @@ I purchased the Flow and Segfault beans. Shipping was decently quick, and the ba
 
 ![The beans and my brewing setup](/assets/images/05-15-beans.jpg)
 
-## Brewing Method
+## The Coffee
 
 I'm brewing on my Gaggia Classic Pro Evo and grinding with a Niche Zero. I don't feel like the Evo needs the temp-surfing that the earlier models do, so I just send it when the light turns red.
 Portafilter is the GCP stock porta with a fancy pants Wiedemann handle. I'm tamping with the [Decent V6 calibrated tamper](https://decentespresso.com/tamper). Grind size is between 20 and 21.
@@ -41,6 +41,8 @@ Both beans are tasty, and I don't regret the purchase at all. I think I like the
 
 We usually get [Speckled Ax](https://speckledax.com/) Corduroy blend 5lbs at a time, so, it's tough for really anybody to compete with super high quality, locally roasted coffee, and we have a _lot_ of that in Portland.
 I absolutely _love_ the coffee we get from Speckled Ax, but they're a tough competitor! I don't think anyone is expecting, like, Blue Bottle (to use a well-known roaster) but I do think the terminal beans are good.
+
+## Minor Gripes
 
 My only bummer note is that the bags didn't have a roasted on date on them. There is a spot on the bottom of the bag where it _should_ go, but both bags were blank. Bummer! I do actually care when my beans
 were roasted (you should too!) and I think it's a pretty big miss to not have that on the bag. I know that terminal.shop is a meme, but I think they should take the coffee part seriously.

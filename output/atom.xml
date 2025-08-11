@@ -3,13 +3,20 @@
   <title>andyleclair.dev</title>
   <link href="https://andyleclair.dev/" />
   <link href="https://andyleclair.dev/atom.xml" rel="self" />
-  <updated>2025-05-18T00:00:00-05:00</updated>
+  <updated>2025-08-11T00:00:00-05:00</updated>
   <author>
     <name>Andy LeClair</name>
   </author>
   <id>https://andyleclair.dev/</id>
 
   <entry>
+  <title>First Game!</title>
+  <link href="https://andyleclair.dev/posts/2025/08-11-first-game.html" />
+  <id>https://andyleclair.dev/posts/2025/08-11-first-game.html</id>
+  <updated>2025-08-11T00:00:00-05:00</updated>
+  <summary>My first steps with Bevy ECS</summary>
+</entry>
+<entry>
   <title>terminal.shop coffee first impressions</title>
   <link href="https://andyleclair.dev/posts/2025/05-18-terminal-shop-coffee-first-impressions.html" />
   <id>https://andyleclair.dev/posts/2025/05-18-terminal-shop-coffee-first-impressions.html</id>

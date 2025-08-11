@@ -6,6 +6,13 @@
     <link>https://andyleclair.dev/</link>
     <atom:link href="https://andyleclair.dev/feed.xml" rel="self" type="application/rss+xml" />
     <item>
+  <title>First Game!</title>
+  <description>My first steps with Bevy ECS</description>
+  <pubDate>Mon, 11 Aug 2025 00:00:00 EST</pubDate>
+  <link>https://andyleclair.dev/posts/2025/08-11-first-game.html</link>
+  <guid isPermaLink="true">https://andyleclair.dev/posts/2025/08-11-first-game.html</guid>
+</item>
+<item>
   <title>terminal.shop coffee first impressions</title>
   <description>is this what a meme tastes like?</description>
   <pubDate>Sun, 18 May 2025 00:00:00 EST</pubDate>

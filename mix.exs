@@ -24,8 +24,7 @@ defmodule Personal.MixProject do
   defp deps do
     [
       {:esbuild, "~> 0.5"},
-      {:makeup_elixir, ">= 0.0.0"},
-      {:makeup_erlang, ">= 0.0.0"},
+      {:makeup_syntect, "~> 0.1"},
       {:nimble_publisher, "~> 1.1.0"},
       {:phoenix, "~> 1.7"},
       {:bandit, "~> 1.0"},

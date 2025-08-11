@@ -29,182 +29,182 @@ so let’s do the ‘ol classic and draw a triangle. Everyone loves a triangle.
 The journey of a thousand triangles begins with a single triangle.</p>
 <p>
 This post is basically porting the C++ from <a href="https://learnopengl.com/Getting-started/Hello-Triangle">this learnopengl.com chapter</a> to Elixir.</p>
-<pre><code class="makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">GlTest.Window</span><span class="w"> </span><span class="k" data-group-id="2117951744-1">do</span><span class="w">
-  </span><span class="kn">import</span><span class="w"> </span><span class="nc">WxRecords</span><span class="w">
+<pre><code class="elixir">defmodule GlTest.Window do
+  import WxRecords
 
-  </span><span class="na">@behaviour</span><span class="w"> </span><span class="ss">:wx_object</span><span class="w">
+  @behaviour :wx_object
 
-  </span><span class="kd">def</span><span class="w"> </span><span class="nf">start_link</span><span class="p" data-group-id="2117951744-2">(</span><span class="bp">_</span><span class="p" data-group-id="2117951744-2">)</span><span class="w"> </span><span class="k" data-group-id="2117951744-3">do</span><span class="w">
-    </span><span class="nc">:wx_object</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="2117951744-4">(</span><span class="bp">__MODULE__</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2117951744-5">[</span><span class="p" data-group-id="2117951744-5">]</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2117951744-6">[</span><span class="p" data-group-id="2117951744-6">]</span><span class="p" data-group-id="2117951744-4">)</span><span class="w">
-    </span><span class="p" data-group-id="2117951744-7">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">self</span><span class="p" data-group-id="2117951744-8">(</span><span class="p" data-group-id="2117951744-8">)</span><span class="p" data-group-id="2117951744-7">}</span><span class="w">
-  </span><span class="k" data-group-id="2117951744-3">end</span><span class="w">
+  def start_link(_) do
+    :wx_object.start_link(__MODULE__, [], [])
+    {:ok, self()}
+  end
 
-  </span><span class="na">@impl</span><span class="w"> </span><span class="ss">:wx_object</span><span class="w">
-  </span><span class="kd">def</span><span class="w"> </span><span class="nf">init</span><span class="p" data-group-id="2117951744-9">(</span><span class="bp">_</span><span class="p" data-group-id="2117951744-9">)</span><span class="w"> </span><span class="k" data-group-id="2117951744-10">do</span><span class="w">
-    </span><span class="n">opts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="2117951744-11">[</span><span class="ss">size</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="2117951744-12">{</span><span class="mi">800</span><span class="p">,</span><span class="w"> </span><span class="mi">600</span><span class="p" data-group-id="2117951744-12">}</span><span class="p" data-group-id="2117951744-11">]</span><span class="w">
-    </span><span class="n">wx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">:wx</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="2117951744-13">(</span><span class="p" data-group-id="2117951744-13">)</span><span class="w">
-    </span><span class="n">frame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">:wxFrame</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="2117951744-14">(</span><span class="n">wx</span><span class="p">,</span><span class="w"> </span><span class="nc">:wx_const</span><span class="o">.</span><span class="n">wx_id_any</span><span class="p" data-group-id="2117951744-15">(</span><span class="p" data-group-id="2117951744-15">)</span><span class="p">,</span><span class="w"> </span><span class="s">~c&quot;Hello&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">opts</span><span class="p" data-group-id="2117951744-14">)</span><span class="w">
-    </span><span class="nc">:wxWindow</span><span class="o">.</span><span class="n">connect</span><span class="p" data-group-id="2117951744-16">(</span><span class="n">frame</span><span class="p">,</span><span class="w"> </span><span class="ss">:close_window</span><span class="p" data-group-id="2117951744-16">)</span><span class="w">
+  @impl :wx_object
+  def init(_) do
+    opts = [size: {800, 600}]
+    wx = :wx.new()
+    frame = :wxFrame.new(wx, :wx_const.wx_id_any(), ~c&quot;Hello&quot;, opts)
+    :wxWindow.connect(frame, :close_window)
 
-    </span><span class="nc">:wxFrame</span><span class="o">.</span><span class="n">show</span><span class="p" data-group-id="2117951744-17">(</span><span class="n">frame</span><span class="p" data-group-id="2117951744-17">)</span><span class="w">
+    :wxFrame.show(frame)
 
-    </span><span class="n">gl_attrib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="2117951744-18">[</span><span class="w">
-      </span><span class="ss">attribList</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="2117951744-19">[</span><span class="w">
-        </span><span class="nc">:wx_const</span><span class="o">.</span><span class="n">wx_gl_core_profile</span><span class="p" data-group-id="2117951744-20">(</span><span class="p" data-group-id="2117951744-20">)</span><span class="p">,</span><span class="w">
-        </span><span class="nc">:wx_const</span><span class="o">.</span><span class="n">wx_gl_major_version</span><span class="p" data-group-id="2117951744-21">(</span><span class="p" data-group-id="2117951744-21">)</span><span class="p">,</span><span class="w">
-        </span><span class="mi">3</span><span class="p">,</span><span class="w">
-        </span><span class="nc">:wx_const</span><span class="o">.</span><span class="n">wx_gl_minor_version</span><span class="p" data-group-id="2117951744-22">(</span><span class="p" data-group-id="2117951744-22">)</span><span class="p">,</span><span class="w">
-        </span><span class="mi">3</span><span class="p">,</span><span class="w">
-        </span><span class="nc">:wx_const</span><span class="o">.</span><span class="n">wx_gl_doublebuffer</span><span class="p" data-group-id="2117951744-23">(</span><span class="p" data-group-id="2117951744-23">)</span><span class="p">,</span><span class="w">
-        </span><span class="mi">0</span><span class="w">
-      </span><span class="p" data-group-id="2117951744-19">]</span><span class="w">
-    </span><span class="p" data-group-id="2117951744-18">]</span><span class="w">
+    gl_attrib = [
+      attribList: [
+        :wx_const.wx_gl_core_profile(),
+        :wx_const.wx_gl_major_version(),
+        3,
+        :wx_const.wx_gl_minor_version(),
+        3,
+        :wx_const.wx_gl_doublebuffer(),
+        0
+      ]
+    ]
 
-    </span><span class="n">canvas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">:wxGLCanvas</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="2117951744-24">(</span><span class="n">frame</span><span class="p">,</span><span class="w"> </span><span class="n">opts</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">gl_attrib</span><span class="p" data-group-id="2117951744-24">)</span><span class="w">
-    </span><span class="n">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">:wxGLContext</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="2117951744-25">(</span><span class="n">canvas</span><span class="p" data-group-id="2117951744-25">)</span><span class="w">
-    </span><span class="nc">:wxGLCanvas</span><span class="o">.</span><span class="n">setCurrent</span><span class="p" data-group-id="2117951744-26">(</span><span class="n">canvas</span><span class="p">,</span><span class="w"> </span><span class="n">ctx</span><span class="p" data-group-id="2117951744-26">)</span><span class="w">
+    canvas = :wxGLCanvas.new(frame, opts ++ gl_attrib)
+    ctx = :wxGLContext.new(canvas)
+    :wxGLCanvas.setCurrent(canvas, ctx)
 
-    </span><span class="p" data-group-id="2117951744-27">{</span><span class="n">shader_program</span><span class="p">,</span><span class="w"> </span><span class="n">vao</span><span class="p" data-group-id="2117951744-27">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">init_opengl</span><span class="p" data-group-id="2117951744-28">(</span><span class="p" data-group-id="2117951744-28">)</span><span class="w">
+    {shader_program, vao} = init_opengl()
 
-    </span><span class="n">send</span><span class="p" data-group-id="2117951744-29">(</span><span class="n">self</span><span class="p" data-group-id="2117951744-30">(</span><span class="p" data-group-id="2117951744-30">)</span><span class="p">,</span><span class="w"> </span><span class="ss">:update</span><span class="p" data-group-id="2117951744-29">)</span><span class="w">
+    send(self(), :update)
 
-    </span><span class="p" data-group-id="2117951744-31">{</span><span class="n">frame</span><span class="p">,</span><span class="w">
-     </span><span class="p" data-group-id="2117951744-32">%{</span><span class="w">
-       </span><span class="ss">frame</span><span class="p">:</span><span class="w"> </span><span class="n">frame</span><span class="p">,</span><span class="w">
-       </span><span class="ss">canvas</span><span class="p">:</span><span class="w"> </span><span class="n">canvas</span><span class="p">,</span><span class="w">
-       </span><span class="ss">shader_program</span><span class="p">:</span><span class="w"> </span><span class="n">shader_program</span><span class="p">,</span><span class="w">
-       </span><span class="ss">vao</span><span class="p">:</span><span class="w"> </span><span class="n">vao</span><span class="w">
-     </span><span class="p" data-group-id="2117951744-32">}</span><span class="p" data-group-id="2117951744-31">}</span><span class="w">
-  </span><span class="k" data-group-id="2117951744-10">end</span><span class="w">
+    {frame,
+     %{
+       frame: frame,
+       canvas: canvas,
+       shader_program: shader_program,
+       vao: vao
+     }}
+  end
 
-  </span><span class="na">@vertex_source</span><span class="w"> </span><span class="s">&quot;&quot;&quot;
+  @vertex_source &quot;&quot;&quot;
                  #version 330 core
                  layout (location = 0) in vec3 aPos;
                  void main() {
                  gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
-                 }</span><span class="se">\0</span><span class="s">
-                 &quot;&quot;&quot;</span><span class="w">
-                 </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">String</span><span class="o">.</span><span class="n">to_charlist</span><span class="p" data-group-id="2117951744-33">(</span><span class="p" data-group-id="2117951744-33">)</span><span class="w">
+                 }\0
+                 &quot;&quot;&quot;
+                 |&gt; String.to_charlist()
 
-  </span><span class="na">@fragment_source</span><span class="w"> </span><span class="s">&quot;&quot;&quot;
+  @fragment_source &quot;&quot;&quot;
                    #version 330 core
                    out vec4 FragColor;
                    void main() {
                    FragColor = vec4(0.44f, 0.35f, 0.5f, 1.0f);
-                   }</span><span class="se">\0</span><span class="s">
-                   &quot;&quot;&quot;</span><span class="w">
-                   </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">String</span><span class="o">.</span><span class="n">to_charlist</span><span class="p" data-group-id="2117951744-34">(</span><span class="p" data-group-id="2117951744-34">)</span><span class="w">
+                   }\0
+                   &quot;&quot;&quot;
+                   |&gt; String.to_charlist()
 
-  </span><span class="kd">def</span><span class="w"> </span><span class="nf">init_opengl</span><span class="p" data-group-id="2117951744-35">(</span><span class="p" data-group-id="2117951744-35">)</span><span class="w"> </span><span class="k" data-group-id="2117951744-36">do</span><span class="w">
-    </span><span class="n">vertex_shader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">:gl</span><span class="o">.</span><span class="n">createShader</span><span class="p" data-group-id="2117951744-37">(</span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_vertex_shader</span><span class="p" data-group-id="2117951744-38">(</span><span class="p" data-group-id="2117951744-38">)</span><span class="p" data-group-id="2117951744-37">)</span><span class="w">
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">shaderSource</span><span class="p" data-group-id="2117951744-39">(</span><span class="n">vertex_shader</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2117951744-40">[</span><span class="na">@vertex_source</span><span class="p" data-group-id="2117951744-40">]</span><span class="p" data-group-id="2117951744-39">)</span><span class="w">
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">compileShader</span><span class="p" data-group-id="2117951744-41">(</span><span class="n">vertex_shader</span><span class="p" data-group-id="2117951744-41">)</span><span class="w">
+  def init_opengl() do
+    vertex_shader = :gl.createShader(:gl_const.gl_vertex_shader())
+    :gl.shaderSource(vertex_shader, [@vertex_source])
+    :gl.compileShader(vertex_shader)
 
-    </span><span class="n">fragment_shader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">:gl</span><span class="o">.</span><span class="n">createShader</span><span class="p" data-group-id="2117951744-42">(</span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_fragment_shader</span><span class="p" data-group-id="2117951744-43">(</span><span class="p" data-group-id="2117951744-43">)</span><span class="p" data-group-id="2117951744-42">)</span><span class="w">
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">shaderSource</span><span class="p" data-group-id="2117951744-44">(</span><span class="n">fragment_shader</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2117951744-45">[</span><span class="na">@fragment_source</span><span class="p" data-group-id="2117951744-45">]</span><span class="p" data-group-id="2117951744-44">)</span><span class="w">
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">compileShader</span><span class="p" data-group-id="2117951744-46">(</span><span class="n">fragment_shader</span><span class="p" data-group-id="2117951744-46">)</span><span class="w">
+    fragment_shader = :gl.createShader(:gl_const.gl_fragment_shader())
+    :gl.shaderSource(fragment_shader, [@fragment_source])
+    :gl.compileShader(fragment_shader)
 
-    </span><span class="n">shader_program</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">:gl</span><span class="o">.</span><span class="n">createProgram</span><span class="p" data-group-id="2117951744-47">(</span><span class="p" data-group-id="2117951744-47">)</span><span class="w">
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">attachShader</span><span class="p" data-group-id="2117951744-48">(</span><span class="n">shader_program</span><span class="p">,</span><span class="w"> </span><span class="n">vertex_shader</span><span class="p" data-group-id="2117951744-48">)</span><span class="w">
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">attachShader</span><span class="p" data-group-id="2117951744-49">(</span><span class="n">shader_program</span><span class="p">,</span><span class="w"> </span><span class="n">fragment_shader</span><span class="p" data-group-id="2117951744-49">)</span><span class="w">
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">linkProgram</span><span class="p" data-group-id="2117951744-50">(</span><span class="n">shader_program</span><span class="p" data-group-id="2117951744-50">)</span><span class="w">
+    shader_program = :gl.createProgram()
+    :gl.attachShader(shader_program, vertex_shader)
+    :gl.attachShader(shader_program, fragment_shader)
+    :gl.linkProgram(shader_program)
 
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">deleteShader</span><span class="p" data-group-id="2117951744-51">(</span><span class="n">vertex_shader</span><span class="p" data-group-id="2117951744-51">)</span><span class="w">
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">deleteShader</span><span class="p" data-group-id="2117951744-52">(</span><span class="n">fragment_shader</span><span class="p" data-group-id="2117951744-52">)</span><span class="w">
+    :gl.deleteShader(vertex_shader)
+    :gl.deleteShader(fragment_shader)
 
-    </span><span class="n">vertices</span><span class="w"> </span><span class="o">=</span><span class="w">
-      </span><span class="p" data-group-id="2117951744-53">[</span><span class="w">
-        </span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="w">
-        </span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="w">
-        </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
-        </span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="w">
-        </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
-        </span><span class="mf">0.0</span><span class="w">
-      </span><span class="p" data-group-id="2117951744-53">]</span><span class="w">
-      </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Enum</span><span class="o">.</span><span class="n">reduce</span><span class="p" data-group-id="2117951744-54">(</span><span class="p" data-group-id="2117951744-55">&lt;&lt;</span><span class="p" data-group-id="2117951744-55">&gt;&gt;</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="2117951744-56">fn</span><span class="w"> </span><span class="n">el</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="p" data-group-id="2117951744-57">&lt;&lt;</span><span class="n">el</span><span class="o">::</span><span class="n">float</span><span class="o">-</span><span class="n">native</span><span class="o">-</span><span class="n">size</span><span class="p" data-group-id="2117951744-58">(</span><span class="mi">32</span><span class="p" data-group-id="2117951744-58">)</span><span class="p" data-group-id="2117951744-57">&gt;&gt;</span><span class="w"> </span><span class="k" data-group-id="2117951744-56">end</span><span class="p" data-group-id="2117951744-54">)</span><span class="w">
+    vertices =
+      [
+        -0.5,
+        -0.5,
+        0.0,
+        0.5,
+        -0.5,
+        0.0,
+        0.0,
+        0.5,
+        0.0
+      ]
+      |&gt; Enum.reduce(&lt;&lt;&gt;&gt;, fn el, acc -&gt; acc &lt;&gt; &lt;&lt;el::float-native-size(32)&gt;&gt; end)
 
-    </span><span class="p" data-group-id="2117951744-59">[</span><span class="n">vao</span><span class="p" data-group-id="2117951744-59">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">:gl</span><span class="o">.</span><span class="n">genVertexArrays</span><span class="p" data-group-id="2117951744-60">(</span><span class="mi">1</span><span class="p" data-group-id="2117951744-60">)</span><span class="w">
-    </span><span class="p" data-group-id="2117951744-61">[</span><span class="n">vbo</span><span class="p" data-group-id="2117951744-61">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">:gl</span><span class="o">.</span><span class="n">genBuffers</span><span class="p" data-group-id="2117951744-62">(</span><span class="mi">1</span><span class="p" data-group-id="2117951744-62">)</span><span class="w">
+    [vao] = :gl.genVertexArrays(1)
+    [vbo] = :gl.genBuffers(1)
 
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">bindVertexArray</span><span class="p" data-group-id="2117951744-63">(</span><span class="n">vao</span><span class="p" data-group-id="2117951744-63">)</span><span class="w">
+    :gl.bindVertexArray(vao)
 
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">bindBuffer</span><span class="p" data-group-id="2117951744-64">(</span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_array_buffer</span><span class="p" data-group-id="2117951744-65">(</span><span class="p" data-group-id="2117951744-65">)</span><span class="p">,</span><span class="w"> </span><span class="n">vbo</span><span class="p" data-group-id="2117951744-64">)</span><span class="w">
+    :gl.bindBuffer(:gl_const.gl_array_buffer(), vbo)
 
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">bufferData</span><span class="p" data-group-id="2117951744-66">(</span><span class="w">
-      </span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_array_buffer</span><span class="p" data-group-id="2117951744-67">(</span><span class="p" data-group-id="2117951744-67">)</span><span class="p">,</span><span class="w">
-      </span><span class="n">byte_size</span><span class="p" data-group-id="2117951744-68">(</span><span class="n">vertices</span><span class="p" data-group-id="2117951744-68">)</span><span class="p">,</span><span class="w">
-      </span><span class="n">vertices</span><span class="p">,</span><span class="w">
-      </span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_static_draw</span><span class="p" data-group-id="2117951744-69">(</span><span class="p" data-group-id="2117951744-69">)</span><span class="w">
-    </span><span class="p" data-group-id="2117951744-66">)</span><span class="w">
+    :gl.bufferData(
+      :gl_const.gl_array_buffer(),
+      byte_size(vertices),
+      vertices,
+      :gl_const.gl_static_draw()
+    )
 
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">vertexAttribPointer</span><span class="p" data-group-id="2117951744-70">(</span><span class="w">
-      </span><span class="mi">0</span><span class="p">,</span><span class="w">
-      </span><span class="mi">3</span><span class="p">,</span><span class="w">
-      </span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_float</span><span class="p" data-group-id="2117951744-71">(</span><span class="p" data-group-id="2117951744-71">)</span><span class="p">,</span><span class="w">
-      </span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_false</span><span class="p" data-group-id="2117951744-72">(</span><span class="p" data-group-id="2117951744-72">)</span><span class="p">,</span><span class="w">
-      </span><span class="mi">3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">byte_size</span><span class="p" data-group-id="2117951744-73">(</span><span class="p" data-group-id="2117951744-74">&lt;&lt;</span><span class="mf">0.0</span><span class="o">::</span><span class="n">float</span><span class="o">-</span><span class="n">size</span><span class="p" data-group-id="2117951744-75">(</span><span class="mi">32</span><span class="p" data-group-id="2117951744-75">)</span><span class="p" data-group-id="2117951744-74">&gt;&gt;</span><span class="p" data-group-id="2117951744-73">)</span><span class="p">,</span><span class="w">
-      </span><span class="mi">0</span><span class="w">
-    </span><span class="p" data-group-id="2117951744-70">)</span><span class="w">
+    :gl.vertexAttribPointer(
+      0,
+      3,
+      :gl_const.gl_float(),
+      :gl_const.gl_false(),
+      3 * byte_size(&lt;&lt;0.0::float-size(32)&gt;&gt;),
+      0
+    )
 
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">enableVertexAttribArray</span><span class="p" data-group-id="2117951744-76">(</span><span class="mi">0</span><span class="p" data-group-id="2117951744-76">)</span><span class="w">
+    :gl.enableVertexAttribArray(0)
 
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">bindBuffer</span><span class="p" data-group-id="2117951744-77">(</span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_array_buffer</span><span class="p" data-group-id="2117951744-78">(</span><span class="p" data-group-id="2117951744-78">)</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p" data-group-id="2117951744-77">)</span><span class="w">
+    :gl.bindBuffer(:gl_const.gl_array_buffer(), 0)
 
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">bindVertexArray</span><span class="p" data-group-id="2117951744-79">(</span><span class="mi">0</span><span class="p" data-group-id="2117951744-79">)</span><span class="w">
+    :gl.bindVertexArray(0)
 
-    </span><span class="p" data-group-id="2117951744-80">{</span><span class="n">shader_program</span><span class="p">,</span><span class="w"> </span><span class="n">vao</span><span class="p" data-group-id="2117951744-80">}</span><span class="w">
-  </span><span class="k" data-group-id="2117951744-36">end</span><span class="w">
+    {shader_program, vao}
+  end
 
-  </span><span class="na">@impl</span><span class="w"> </span><span class="ss">:wx_object</span><span class="w">
-  </span><span class="kd">def</span><span class="w"> </span><span class="nf">handle_event</span><span class="p" data-group-id="2117951744-81">(</span><span class="n">wx</span><span class="p" data-group-id="2117951744-82">(</span><span class="ss">event</span><span class="p">:</span><span class="w"> </span><span class="n">wxClose</span><span class="p" data-group-id="2117951744-83">(</span><span class="p" data-group-id="2117951744-83">)</span><span class="p" data-group-id="2117951744-82">)</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="2117951744-81">)</span><span class="w"> </span><span class="k" data-group-id="2117951744-84">do</span><span class="w">
-    </span><span class="p" data-group-id="2117951744-85">{</span><span class="ss">:stop</span><span class="p">,</span><span class="w"> </span><span class="ss">:normal</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="2117951744-85">}</span><span class="w">
-  </span><span class="k" data-group-id="2117951744-84">end</span><span class="w">
+  @impl :wx_object
+  def handle_event(wx(event: wxClose()), state) do
+    {:stop, :normal, state}
+  end
 
-  </span><span class="na">@impl</span><span class="w"> </span><span class="ss">:wx_object</span><span class="w">
-  </span><span class="kd">def</span><span class="w"> </span><span class="nf">handle_info</span><span class="p" data-group-id="2117951744-86">(</span><span class="ss">:stop</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2117951744-87">%{</span><span class="ss">canvas</span><span class="p">:</span><span class="w"> </span><span class="n">canvas</span><span class="p" data-group-id="2117951744-87">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="2117951744-86">)</span><span class="w"> </span><span class="k" data-group-id="2117951744-88">do</span><span class="w">
-    </span><span class="nc">:wxGLCanvas</span><span class="o">.</span><span class="n">destroy</span><span class="p" data-group-id="2117951744-89">(</span><span class="n">canvas</span><span class="p" data-group-id="2117951744-89">)</span><span class="w">
+  @impl :wx_object
+  def handle_info(:stop, %{canvas: canvas} = state) do
+    :wxGLCanvas.destroy(canvas)
 
-    </span><span class="p" data-group-id="2117951744-90">{</span><span class="ss">:stop</span><span class="p">,</span><span class="w"> </span><span class="ss">:normal</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="2117951744-90">}</span><span class="w">
-  </span><span class="k" data-group-id="2117951744-88">end</span><span class="w">
+    {:stop, :normal, state}
+  end
 
-  </span><span class="na">@impl</span><span class="w"> </span><span class="ss">:wx_object</span><span class="w">
-  </span><span class="kd">def</span><span class="w"> </span><span class="nf">handle_info</span><span class="p" data-group-id="2117951744-91">(</span><span class="ss">:update</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="2117951744-91">)</span><span class="w"> </span><span class="k" data-group-id="2117951744-92">do</span><span class="w">
-    </span><span class="n">render</span><span class="p" data-group-id="2117951744-93">(</span><span class="n">state</span><span class="p" data-group-id="2117951744-93">)</span><span class="w">
+  @impl :wx_object
+  def handle_info(:update, state) do
+    render(state)
 
-    </span><span class="p" data-group-id="2117951744-94">{</span><span class="ss">:noreply</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="2117951744-94">}</span><span class="w">
-  </span><span class="k" data-group-id="2117951744-92">end</span><span class="w">
+    {:noreply, state}
+  end
 
-  </span><span class="kd">defp</span><span class="w"> </span><span class="nf">render</span><span class="p" data-group-id="2117951744-95">(</span><span class="p" data-group-id="2117951744-96">%{</span><span class="ss">canvas</span><span class="p">:</span><span class="w"> </span><span class="n">canvas</span><span class="p" data-group-id="2117951744-96">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="2117951744-95">)</span><span class="w"> </span><span class="k" data-group-id="2117951744-97">do</span><span class="w">
-    </span><span class="n">draw</span><span class="p" data-group-id="2117951744-98">(</span><span class="n">state</span><span class="p" data-group-id="2117951744-98">)</span><span class="w">
-    </span><span class="nc">:wxGLCanvas</span><span class="o">.</span><span class="n">swapBuffers</span><span class="p" data-group-id="2117951744-99">(</span><span class="n">canvas</span><span class="p" data-group-id="2117951744-99">)</span><span class="w">
-    </span><span class="n">send</span><span class="p" data-group-id="2117951744-100">(</span><span class="n">self</span><span class="p" data-group-id="2117951744-101">(</span><span class="p" data-group-id="2117951744-101">)</span><span class="p">,</span><span class="w"> </span><span class="ss">:update</span><span class="p" data-group-id="2117951744-100">)</span><span class="w">
+  defp render(%{canvas: canvas} = state) do
+    draw(state)
+    :wxGLCanvas.swapBuffers(canvas)
+    send(self(), :update)
 
-    </span><span class="ss">:ok</span><span class="w">
-  </span><span class="k" data-group-id="2117951744-97">end</span><span class="w">
+    :ok
+  end
 
-  </span><span class="kd">defp</span><span class="w"> </span><span class="nf">draw</span><span class="p" data-group-id="2117951744-102">(</span><span class="p" data-group-id="2117951744-103">%{</span><span class="ss">canvas</span><span class="p">:</span><span class="w"> </span><span class="c">_canvas</span><span class="p" data-group-id="2117951744-103">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="2117951744-102">)</span><span class="w"> </span><span class="k" data-group-id="2117951744-104">do</span><span class="w">
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">clearColor</span><span class="p" data-group-id="2117951744-105">(</span><span class="mf">0.2</span><span class="p">,</span><span class="w"> </span><span class="mf">0.1</span><span class="p">,</span><span class="w"> </span><span class="mf">0.3</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p" data-group-id="2117951744-105">)</span><span class="w">
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">clear</span><span class="p" data-group-id="2117951744-106">(</span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_color_buffer_bit</span><span class="p" data-group-id="2117951744-107">(</span><span class="p" data-group-id="2117951744-107">)</span><span class="p" data-group-id="2117951744-106">)</span><span class="w">
+  defp draw(%{canvas: _canvas} = state) do
+    :gl.clearColor(0.2, 0.1, 0.3, 1.0)
+    :gl.clear(:gl_const.gl_color_buffer_bit())
 
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">useProgram</span><span class="p" data-group-id="2117951744-108">(</span><span class="n">state</span><span class="o">.</span><span class="n">shader_program</span><span class="p" data-group-id="2117951744-108">)</span><span class="w">
+    :gl.useProgram(state.shader_program)
 
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">bindVertexArray</span><span class="p" data-group-id="2117951744-109">(</span><span class="n">state</span><span class="o">.</span><span class="n">vao</span><span class="p" data-group-id="2117951744-109">)</span><span class="w">
-    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">drawArrays</span><span class="p" data-group-id="2117951744-110">(</span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_triangles</span><span class="p" data-group-id="2117951744-111">(</span><span class="p" data-group-id="2117951744-111">)</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="2117951744-110">)</span><span class="w">
+    :gl.bindVertexArray(state.vao)
+    :gl.drawArrays(:gl_const.gl_triangles(), 0, 3)
 
-    </span><span class="ss">:ok</span><span class="w">
-  </span><span class="k" data-group-id="2117951744-104">end</span><span class="w">
+    :ok
+  end
 
-  </span><span class="kd">def</span><span class="w"> </span><span class="nf">child_spec</span><span class="p" data-group-id="2117951744-112">(</span><span class="n">opts</span><span class="p" data-group-id="2117951744-112">)</span><span class="w"> </span><span class="k" data-group-id="2117951744-113">do</span><span class="w">
-    </span><span class="p" data-group-id="2117951744-114">%{</span><span class="w">
-      </span><span class="ss">id</span><span class="p">:</span><span class="w"> </span><span class="bp">__MODULE__</span><span class="p">,</span><span class="w">
-      </span><span class="ss">start</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="2117951744-115">{</span><span class="bp">__MODULE__</span><span class="p">,</span><span class="w"> </span><span class="ss">:start_link</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="2117951744-116">[</span><span class="n">opts</span><span class="p" data-group-id="2117951744-116">]</span><span class="p" data-group-id="2117951744-115">}</span><span class="p">,</span><span class="w">
-      </span><span class="ss">restart</span><span class="p">:</span><span class="w"> </span><span class="ss">:permanent</span><span class="w">
-    </span><span class="p" data-group-id="2117951744-114">}</span><span class="w">
-  </span><span class="k" data-group-id="2117951744-113">end</span><span class="w">
-</span><span class="k" data-group-id="2117951744-1">end</span></code></pre>
+  def child_spec(opts) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, [opts]},
+      restart: :permanent
+    }
+  end
+end</code></pre>
 <p>
 Boy, that is a LOT just to render a dang ol triangle. OpenGL doesn’t let you get anything for 
 cheap, huh. Regardless, it’s pretty cool that I can get this to render on my machine with no 

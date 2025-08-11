@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/app.css">
+    <script type="text/javascript" src="/assets/app.js"></script>
+    
+    <title>First Game!</title>
+    <meta name="description" content="My first steps with Bevy ECS">
+  
+  </head>
+
+  <body class="bg-nor-easter text-smurf-blood">
+    <div class="flex h-60 min-h-screen flex-col items-center">
+      <header class="bg-bludacris p-10 my-4 lg:mt-10 lg:mb-14">
+        <h1><a href="https://andyleclair.dev/">andy@andyleclair.dev</a>$><span class="blink">_</span></h1>
+      </header>
+      <main class="container mx-auto relative grow min-h-96 flex-1 p-4 items-center">
+        
+  <article class="mx-auto prose sm:prose-sm md:prose-md lg:prose-xl prose-pre:bg-codebg">
+    <h1>First Game!</h1>
+    <h3>My first steps with Bevy ECS</h3>
+    <h3><a href="https://www.youtube.com/watch?v=yLnkVKJoL-4">Related Listening</a></h3>
+    <p class="text-smurf-blood">Posted on 2025-08-11</p>
+    <p>
+Been a minute since I’ve had a new post here, and there’s a good reason for that. On April 29th 2025, my wife and I welcomed our second child to the world! We are so glad to have you here, Jamie Valentine!</p>
+<p>
+Shocking absolutely no-one, having two children has put a bit of a damper on my extracurricular programming. That said, I did find a little time here and there to put together my first “game.”</p>
+<p>
+Game in quotes there, because it’s a zero-player game. I’ve built a clone of <a href="https://github.com/vnglst/pong-wars">Pong Wars</a> using <a href="https://bevy.org/">Bevy ECS</a>. Check the code out <a href="https://github.com/andyleclair/bevy_pong_wars">here</a></p>
+<p>
+Overall, it was a fun project! I enjoy writing Rust well enough, and working from the Bevy examples, I was able to put this working game together in pretty short order. </p>
+<p>
+I did find my Elixir-y propensity to make a bunch of little helper functions is not in the Rust-way, and that’s fine. I was trying to refactor a few bits to not repeat myself, but it’s actually fine I guess? Judging by the <a href="https://lore.kernel.org/lkml/CAHk-=wjLCqUUWd8DzG+xsOn-yVL0Q=O35U9D6j6=2DUWX52ghQ@mail.gmail.com/">recent Linus Rant™</a> maybe DRY-ing everything isn’t actually a benefit.</p>
+<p>
+Specifically, I was trying to DRY up this code here:</p>
+<pre><code class="makeup rust"><span class="w">
+</span><span class="kt">fn</span><span class="w"> </span><span class="nf">check_for_light_collisions</span><span class="p">(</span><span class="w">
+</span><span class="w">    </span><span class="kd">mut</span><span class="w"> </span><span class="nv">commands</span><span class="p">:</span><span class="n"> Commands,
+</span><span class="w">    </span><span class="kd">mut</span><span class="w"> </span><span class="nv">light_score</span><span class="p">:</span><span class="w"> </span><span class="n">ResMut</span><span class="p">&lt;</span><span class="n">LightScore</span><span class="p">&gt;</span><span class="n">,
+</span><span class="w">    </span><span class="kd">mut</span><span class="w"> </span><span class="nv">dark_score</span><span class="p">:</span><span class="w"> </span><span class="n">ResMut</span><span class="p">&lt;</span><span class="n">DarkScore</span><span class="p">&gt;</span><span class="n">,
+</span><span class="w">    </span><span class="nv">ball_query</span><span class="p">:</span><span class="w"> </span><span class="n">Single</span><span class="p">&lt;</span><span class="p">(</span><span class="o">&amp;</span><span class="kd">mut</span><span class="n"> Velocity, </span><span class="o">&amp;</span><span class="n">Transform</span><span class="p">)</span><span class="n">, </span><span class="p">(</span><span class="n">With</span><span class="p">&lt;</span><span class="n">Ball</span><span class="p">&gt;</span><span class="n">, </span><span class="n">With</span><span class="p">&lt;</span><span class="n">Light</span><span class="p">&gt;</span><span class="n">, </span><span class="n">Without</span><span class="p">&lt;</span><span class="n">Dark</span><span class="p">&gt;</span><span class="p">)</span><span class="p">&gt;</span><span class="n">,
+</span><span class="w">    </span><span class="nv">block_query</span><span class="p">:</span><span class="w"> </span><span class="n">Query</span><span class="p">&lt;</span><span class="p">(</span><span class="n">Entity, </span><span class="o">&amp;</span><span class="n">Transform</span><span class="p">)</span><span class="n">, </span><span class="p">(</span><span class="n">With</span><span class="p">&lt;</span><span class="n">Block</span><span class="p">&gt;</span><span class="n">, </span><span class="n">With</span><span class="p">&lt;</span><span class="n">Dark</span><span class="p">&gt;</span><span class="p">)</span><span class="p">&gt;</span><span class="n">,
+</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span><span class="w">    </span><span class="kt">let</span><span class="w"> </span><span class="p">(</span><span class="kd">mut</span><span class="n"> ball_velocity</span><span class="p">,</span><span class="n"> ball_transform</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="n"> ball_query</span><span class="p">.</span><span class="nf">into_inner</span><span class="p">(</span><span class="p">)</span><span class="p">;</span><span class="w">
+</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">block_entity</span><span class="p">,</span><span class="n"> block_transform</span><span class="p">)</span><span class="w"> </span><span class="o">in</span><span class="n"> block_query </span><span class="p">{</span><span class="w">
+</span><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="kt">let</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">collision</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ball_collision</span><span class="p">(</span><span class="w">
+</span><span class="w">            </span><span class="n">BoundingCircle</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">ball_transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="nf">truncate</span><span class="p">(</span><span class="p">)</span><span class="p">,</span><span class="w"> </span><span class="no">BALL_SIZE</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">2.</span><span class="p">)</span><span class="p">,</span><span class="w">
+</span><span class="w">            </span><span class="n">Aabb2d</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="w">
+</span><span class="n">                block_transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="nf">truncate</span><span class="p">(</span><span class="p">)</span><span class="p">,</span><span class="w">
+</span><span class="n">                block_transform</span><span class="p">.</span><span class="n">scale</span><span class="p">.</span><span class="nf">truncate</span><span class="p">(</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">2.</span><span class="p">,</span><span class="w">
+</span><span class="w">            </span><span class="p">)</span><span class="p">,</span><span class="w">
+</span><span class="w">        </span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span><span class="w">            </span><span class="cm">//</span><span class="cm"> Despawn the dark block and spawn a light block in its&#39; place
+</span><span class="n">            commands</span><span class="p">.</span><span class="nf">entity</span><span class="p">(</span><span class="n">block_entity</span><span class="p">)</span><span class="p">.</span><span class="nf">despawn</span><span class="p">(</span><span class="p">)</span><span class="p">;</span><span class="w">
+</span><span class="n">            commands</span><span class="p">.</span><span class="nf">spawn</span><span class="p">(</span><span class="p">(</span><span class="w">
+</span><span class="n">                Sprite </span><span class="p">{</span><span class="w">
+</span><span class="n">                    color</span><span class="p">:</span><span class="w"> </span><span class="no">LIGHT_COLOR</span><span class="p">,</span><span class="w">
+</span><span class="w">                    </span><span class="o">..</span><span class="nf">default</span><span class="p">(</span><span class="p">)</span><span class="w">
+</span><span class="w">                </span><span class="p">}</span><span class="p">,</span><span class="w">
+</span><span class="n">                block_transform</span><span class="p">.</span><span class="nf">clone</span><span class="p">(</span><span class="p">)</span><span class="p">,</span><span class="w">
+</span><span class="n">                Block</span><span class="p">,</span><span class="w">
+</span><span class="n">                Light</span><span class="p">,</span><span class="w">
+</span><span class="w">            </span><span class="p">)</span><span class="p">)</span><span class="p">;</span><span class="w">
+</span><span class="w">
+</span><span class="w">            </span><span class="cm">//</span><span class="cm"> Update the score
+</span><span class="w">            </span><span class="o">*</span><span class="o">*</span><span class="n">light_score </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">
+</span><span class="w">            </span><span class="o">*</span><span class="o">*</span><span class="n">dark_score </span><span class="o">-=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">
+</span><span class="w">
+</span><span class="w">            </span><span class="cm">//</span><span class="cm"> Reflect the ball&#39;s velocity when it collides
+</span><span class="w">            </span><span class="kt">let</span><span class="w"> </span><span class="kd">mut</span><span class="n"> reflect_x </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span><span class="w">            </span><span class="kt">let</span><span class="w"> </span><span class="kd">mut</span><span class="n"> reflect_y </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span><span class="w">
+</span><span class="w">            </span><span class="cm">//</span><span class="cm"> Reflect only if the velocity is in the opposite direction of the collision
+</span><span class="w">            </span><span class="cm">//</span><span class="cm"> This prevents the ball from getting stuck inside the bar
+</span><span class="w">            </span><span class="k">match</span><span class="n"> collision </span><span class="p">{</span><span class="w">
+</span><span class="w">                </span><span class="n">Collision</span><span class="p">::</span><span class="n">Left </span><span class="o">=&gt;</span><span class="n"> reflect_x </span><span class="o">=</span><span class="n"> ball_velocity</span><span class="p">.</span><span class="n">x </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0.</span><span class="mf">0</span><span class="p">,</span><span class="w">
+</span><span class="w">                </span><span class="n">Collision</span><span class="p">::</span><span class="n">Right </span><span class="o">=&gt;</span><span class="n"> reflect_x </span><span class="o">=</span><span class="n"> ball_velocity</span><span class="p">.</span><span class="n">x </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">0.</span><span class="mf">0</span><span class="p">,</span><span class="w">
+</span><span class="w">                </span><span class="n">Collision</span><span class="p">::</span><span class="n">Top </span><span class="o">=&gt;</span><span class="n"> reflect_y </span><span class="o">=</span><span class="n"> ball_velocity</span><span class="p">.</span><span class="n">y </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">0.</span><span class="mf">0</span><span class="p">,</span><span class="w">
+</span><span class="w">                </span><span class="n">Collision</span><span class="p">::</span><span class="n">Bottom </span><span class="o">=&gt;</span><span class="n"> reflect_y </span><span class="o">=</span><span class="n"> ball_velocity</span><span class="p">.</span><span class="n">y </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0.</span><span class="mf">0</span><span class="p">,</span><span class="w">
+</span><span class="w">            </span><span class="p">}</span><span class="w">
+</span><span class="w">
+</span><span class="w">            </span><span class="cm">//</span><span class="cm"> Reflect velocity on the x-axis if we hit something on the x-axis
+</span><span class="w">            </span><span class="k">if</span><span class="n"> reflect_x </span><span class="p">{</span><span class="w">
+</span><span class="n">                ball_velocity</span><span class="p">.</span><span class="n">x </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">ball_velocity</span><span class="p">.</span><span class="n">x</span><span class="p">;</span><span class="w">
+</span><span class="w">            </span><span class="p">}</span><span class="w">
+</span><span class="w">
+</span><span class="w">            </span><span class="cm">//</span><span class="cm"> Reflect velocity on the y-axis if we hit something on the y-axis
+</span><span class="w">            </span><span class="k">if</span><span class="n"> reflect_y </span><span class="p">{</span><span class="w">
+</span><span class="n">                ball_velocity</span><span class="p">.</span><span class="n">y </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">ball_velocity</span><span class="p">.</span><span class="n">y</span><span class="p">;</span><span class="w">
+</span><span class="w">            </span><span class="p">}</span><span class="w">
+</span><span class="w">        </span><span class="p">}</span><span class="w">
+</span><span class="w">    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="w">
+</span><span class="kt">fn</span><span class="w"> </span><span class="nf">check_for_dark_collisions</span><span class="p">(</span><span class="w">
+</span><span class="w">    </span><span class="kd">mut</span><span class="w"> </span><span class="nv">commands</span><span class="p">:</span><span class="n"> Commands,
+</span><span class="w">    </span><span class="kd">mut</span><span class="w"> </span><span class="nv">light_score</span><span class="p">:</span><span class="w"> </span><span class="n">ResMut</span><span class="p">&lt;</span><span class="n">LightScore</span><span class="p">&gt;</span><span class="n">,
+</span><span class="w">    </span><span class="kd">mut</span><span class="w"> </span><span class="nv">dark_score</span><span class="p">:</span><span class="w"> </span><span class="n">ResMut</span><span class="p">&lt;</span><span class="n">DarkScore</span><span class="p">&gt;</span><span class="n">,
+</span><span class="w">    </span><span class="nv">ball_query</span><span class="p">:</span><span class="w"> </span><span class="n">Single</span><span class="p">&lt;</span><span class="p">(</span><span class="o">&amp;</span><span class="kd">mut</span><span class="n"> Velocity, </span><span class="o">&amp;</span><span class="n">Transform</span><span class="p">)</span><span class="n">, </span><span class="p">(</span><span class="n">With</span><span class="p">&lt;</span><span class="n">Ball</span><span class="p">&gt;</span><span class="n">, </span><span class="n">With</span><span class="p">&lt;</span><span class="n">Dark</span><span class="p">&gt;</span><span class="n">, </span><span class="n">Without</span><span class="p">&lt;</span><span class="n">Light</span><span class="p">&gt;</span><span class="p">)</span><span class="p">&gt;</span><span class="n">,
+</span><span class="w">    </span><span class="nv">block_query</span><span class="p">:</span><span class="w"> </span><span class="n">Query</span><span class="p">&lt;</span><span class="p">(</span><span class="n">Entity, </span><span class="o">&amp;</span><span class="n">Transform</span><span class="p">)</span><span class="n">, </span><span class="p">(</span><span class="n">With</span><span class="p">&lt;</span><span class="n">Block</span><span class="p">&gt;</span><span class="n">, </span><span class="n">With</span><span class="p">&lt;</span><span class="n">Light</span><span class="p">&gt;</span><span class="p">)</span><span class="p">&gt;</span><span class="n">,
+</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span><span class="w">    </span><span class="kt">let</span><span class="w"> </span><span class="p">(</span><span class="kd">mut</span><span class="n"> ball_velocity</span><span class="p">,</span><span class="n"> ball_transform</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="n"> ball_query</span><span class="p">.</span><span class="nf">into_inner</span><span class="p">(</span><span class="p">)</span><span class="p">;</span><span class="w">
+</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">block_entity</span><span class="p">,</span><span class="n"> block_transform</span><span class="p">)</span><span class="w"> </span><span class="o">in</span><span class="n"> block_query </span><span class="p">{</span><span class="w">
+</span><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="kt">let</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">collision</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">ball_collision</span><span class="p">(</span><span class="w">
+</span><span class="w">            </span><span class="n">BoundingCircle</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">ball_transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="nf">truncate</span><span class="p">(</span><span class="p">)</span><span class="p">,</span><span class="w"> </span><span class="no">BALL_SIZE</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">2.</span><span class="p">)</span><span class="p">,</span><span class="w">
+</span><span class="w">            </span><span class="n">Aabb2d</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="w">
+</span><span class="n">                block_transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="nf">truncate</span><span class="p">(</span><span class="p">)</span><span class="p">,</span><span class="w">
+</span><span class="n">                block_transform</span><span class="p">.</span><span class="n">scale</span><span class="p">.</span><span class="nf">truncate</span><span class="p">(</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">2.</span><span class="p">,</span><span class="w">
+</span><span class="w">            </span><span class="p">)</span><span class="p">,</span><span class="w">
+</span><span class="w">        </span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span><span class="w">            </span><span class="cm">//</span><span class="cm"> Despawn the dark block and spawn a light block in its&#39; place
+</span><span class="n">            commands</span><span class="p">.</span><span class="nf">entity</span><span class="p">(</span><span class="n">block_entity</span><span class="p">)</span><span class="p">.</span><span class="nf">despawn</span><span class="p">(</span><span class="p">)</span><span class="p">;</span><span class="w">
+</span><span class="n">            commands</span><span class="p">.</span><span class="nf">spawn</span><span class="p">(</span><span class="p">(</span><span class="w">
+</span><span class="n">                Sprite </span><span class="p">{</span><span class="w">
+</span><span class="n">                    color</span><span class="p">:</span><span class="w"> </span><span class="no">DARK_COLOR</span><span class="p">,</span><span class="w">
+</span><span class="w">                    </span><span class="o">..</span><span class="nf">default</span><span class="p">(</span><span class="p">)</span><span class="w">
+</span><span class="w">                </span><span class="p">}</span><span class="p">,</span><span class="w">
+</span><span class="n">                block_transform</span><span class="p">.</span><span class="nf">clone</span><span class="p">(</span><span class="p">)</span><span class="p">,</span><span class="w">
+</span><span class="n">                Block</span><span class="p">,</span><span class="w">
+</span><span class="n">                Dark</span><span class="p">,</span><span class="w">
+</span><span class="w">            </span><span class="p">)</span><span class="p">)</span><span class="p">;</span><span class="w">
+</span><span class="w">
+</span><span class="w">            </span><span class="cm">//</span><span class="cm"> Update the score
+</span><span class="w">            </span><span class="o">*</span><span class="o">*</span><span class="n">dark_score </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">
+</span><span class="w">            </span><span class="o">*</span><span class="o">*</span><span class="n">light_score </span><span class="o">-=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">
+</span><span class="w">
+</span><span class="w">            </span><span class="cm">//</span><span class="cm"> Reflect the ball&#39;s velocity when it collides
+</span><span class="w">            </span><span class="kt">let</span><span class="w"> </span><span class="kd">mut</span><span class="n"> reflect_x </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span><span class="w">            </span><span class="kt">let</span><span class="w"> </span><span class="kd">mut</span><span class="n"> reflect_y </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span><span class="w">
+</span><span class="w">            </span><span class="cm">//</span><span class="cm"> Reflect only if the velocity is in the opposite direction of the collision
+</span><span class="w">            </span><span class="cm">//</span><span class="cm"> This prevents the ball from getting stuck inside the bar
+</span><span class="w">            </span><span class="k">match</span><span class="n"> collision </span><span class="p">{</span><span class="w">
+</span><span class="w">                </span><span class="n">Collision</span><span class="p">::</span><span class="n">Left </span><span class="o">=&gt;</span><span class="n"> reflect_x </span><span class="o">=</span><span class="n"> ball_velocity</span><span class="p">.</span><span class="n">x </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0.</span><span class="mf">0</span><span class="p">,</span><span class="w">
+</span><span class="w">                </span><span class="n">Collision</span><span class="p">::</span><span class="n">Right </span><span class="o">=&gt;</span><span class="n"> reflect_x </span><span class="o">=</span><span class="n"> ball_velocity</span><span class="p">.</span><span class="n">x </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">0.</span><span class="mf">0</span><span class="p">,</span><span class="w">
+</span><span class="w">                </span><span class="n">Collision</span><span class="p">::</span><span class="n">Top </span><span class="o">=&gt;</span><span class="n"> reflect_y </span><span class="o">=</span><span class="n"> ball_velocity</span><span class="p">.</span><span class="n">y </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">0.</span><span class="mf">0</span><span class="p">,</span><span class="w">
+</span><span class="w">                </span><span class="n">Collision</span><span class="p">::</span><span class="n">Bottom </span><span class="o">=&gt;</span><span class="n"> reflect_y </span><span class="o">=</span><span class="n"> ball_velocity</span><span class="p">.</span><span class="n">y </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0.</span><span class="mf">0</span><span class="p">,</span><span class="w">
+</span><span class="w">            </span><span class="p">}</span><span class="w">
+</span><span class="w">
+</span><span class="w">            </span><span class="cm">//</span><span class="cm"> Reflect velocity on the x-axis if we hit something on the x-axis
+</span><span class="w">            </span><span class="k">if</span><span class="n"> reflect_x </span><span class="p">{</span><span class="w">
+</span><span class="n">                ball_velocity</span><span class="p">.</span><span class="n">x </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">ball_velocity</span><span class="p">.</span><span class="n">x</span><span class="p">;</span><span class="w">
+</span><span class="w">            </span><span class="p">}</span><span class="w">
+</span><span class="w">
+</span><span class="w">            </span><span class="cm">//</span><span class="cm"> Reflect velocity on the y-axis if we hit something on the y-axis
+</span><span class="w">            </span><span class="k">if</span><span class="n"> reflect_y </span><span class="p">{</span><span class="w">
+</span><span class="n">                ball_velocity</span><span class="p">.</span><span class="n">y </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">ball_velocity</span><span class="p">.</span><span class="n">y</span><span class="p">;</span><span class="w">
+</span><span class="w">            </span><span class="p">}</span><span class="w">
+</span><span class="w">        </span><span class="p">}</span><span class="w">
+</span><span class="w">    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre>
+<p>
+Really, the only difference here is which colors we’re “selecting” in the <code class="inline">Query</code> and the opposite-color spawning. I ran into a bunch of issues trying to make a helper, though. My shittiness at Rust was showing for sure!</p>
+<p>
+That all said, this was a fun project. The Bevy template was brand new when I was starting this, so I went with the “rawdogging it all in main.rs” strategy that many of the examples show. </p>
+<p>
+Next I may rebuild it using the template to see how the experience differs. I was interested in getting into some Zig, but this project was fun and maybe I just keep writing Rust!</p>
+
+  </article>
+
+      </main>
+      <footer class="mt-24 bg-bludacris p-4 text-center">
+        © Andy LeClair 2024 | <a href="/atom.xml">Atom</a> | <a href="/feed.xml">RSS</a>
+      </footer>
+    </div>
+  </body>
+</html>

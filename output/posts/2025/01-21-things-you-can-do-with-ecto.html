@@ -32,117 +32,117 @@ Fragment</h2>
 <p>
 <code class="inline">fragment</code> is an elegant escape hatch when you need to do something specific to your database. Clickhouse has a <em>ton</em> of specific functions, so we use <code class="inline">fragment</code> a lot.
 We have a module that looks like this that we import, like <code class="inline">Ecto.Query</code>. For example, if you wanted to use Clickhouse’s <code class="inline">argMax</code> aggregate to get the <em>latest</em> value for a column, given some timestamp column (a common use-case), you could do this:</p>
-<pre><code class="makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">Clickhouse.Helpers</span><span class="w"> </span><span class="k" data-group-id="1733478317-1">do</span><span class="w">
-  </span><span class="kn">import</span><span class="w"> </span><span class="nc">Ecto.Query</span><span class="w">
+<pre><code class="elixir">defmodule Clickhouse.Helpers do
+  import Ecto.Query
 
-  </span><span class="kd">defmacro</span><span class="w"> </span><span class="nf">arg_max</span><span class="p" data-group-id="1733478317-2">(</span><span class="n">column</span><span class="p">,</span><span class="w"> </span><span class="n">timestamp</span><span class="p" data-group-id="1733478317-2">)</span><span class="w"> </span><span class="k" data-group-id="1733478317-3">do</span><span class="w">
-    </span><span class="k">quote</span><span class="w"> </span><span class="k" data-group-id="1733478317-4">do</span><span class="w">
-      </span><span class="n">fragment</span><span class="p" data-group-id="1733478317-5">(</span><span class="s">&quot;argMax(?, ?)&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">unquote</span><span class="p" data-group-id="1733478317-6">(</span><span class="n">column</span><span class="p" data-group-id="1733478317-6">)</span><span class="p">,</span><span class="w"> </span><span class="k">unquote</span><span class="p" data-group-id="1733478317-7">(</span><span class="n">timestamp</span><span class="p" data-group-id="1733478317-7">)</span><span class="p" data-group-id="1733478317-5">)</span><span class="w">
-    </span><span class="k" data-group-id="1733478317-4">end</span><span class="w">
-  </span><span class="k" data-group-id="1733478317-3">end</span><span class="w">
-</span><span class="k" data-group-id="1733478317-1">end</span></code></pre>
+  defmacro arg_max(column, timestamp) do
+    quote do
+      fragment(&quot;argMax(?, ?)&quot;, unquote(column), unquote(timestamp))
+    end
+  end
+end</code></pre>
 <p>
 And this works! Let’s imagine you’re storing user profiles. The profiles are essentially a map with the keys and values broken out into separate columns.</p>
 <p>
 With a table schema like this:</p>
-<pre><code class="makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">MyApp.UserProfile</span><span class="w"> </span><span class="k" data-group-id="1561545857-1">do</span><span class="w">
-  </span><span class="kn">use</span><span class="w"> </span><span class="nc">Ecto.Schema</span><span class="w">
+<pre><code class="elixir">defmodule MyApp.UserProfile do
+  use Ecto.Schema
 
-  </span><span class="n">schema</span><span class="w"> </span><span class="s">&quot;user_profiles&quot;</span><span class="w"> </span><span class="k" data-group-id="1561545857-2">do</span><span class="w">
-    </span><span class="n">field</span><span class="w"> </span><span class="ss">:user_id</span><span class="p">,</span><span class="w"> </span><span class="ss">:string</span><span class="w">
-    </span><span class="n">field</span><span class="w"> </span><span class="ss">:key</span><span class="p">,</span><span class="w"> </span><span class="ss">:string</span><span class="w">
-    </span><span class="n">field</span><span class="w"> </span><span class="ss">:value</span><span class="p">,</span><span class="w"> </span><span class="ss">:string</span><span class="w">
-    </span><span class="n">field</span><span class="w"> </span><span class="ss">:timestamp</span><span class="p">,</span><span class="w"> </span><span class="nc">Ch</span><span class="p">,</span><span class="w"> </span><span class="ss">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;DateTime64(3)&quot;</span><span class="w">
-  </span><span class="k" data-group-id="1561545857-2">end</span><span class="w">
-</span><span class="k" data-group-id="1561545857-1">end</span></code></pre>
+  schema &quot;user_profiles&quot; do
+    field :user_id, :string
+    field :key, :string
+    field :value, :string
+    field :timestamp, Ch, type: &quot;DateTime64(3)&quot;
+  end
+end</code></pre>
 <p>
 We will not update values, instead we will just write in new values whenever some attribute changes. You can easily get the latest values for each user with a query like this:</p>
-<pre><code class="makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">MyApp.Profiles</span><span class="w"> </span><span class="k" data-group-id="5791864621-1">do</span><span class="w">
-  </span><span class="kn">import</span><span class="w"> </span><span class="nc">Ecto.Query</span><span class="w">
-  </span><span class="kn">import</span><span class="w"> </span><span class="nc">Clickhouse.Helpers</span><span class="w">
+<pre><code class="elixir">defmodule MyApp.Profiles do
+  import Ecto.Query
+  import Clickhouse.Helpers
 
-  </span><span class="kn">alias</span><span class="w"> </span><span class="nc">MyApp.UserProfile</span><span class="w">
+  alias MyApp.UserProfile
 
-  </span><span class="kd">def</span><span class="w"> </span><span class="nf">latest_values</span><span class="w"> </span><span class="k" data-group-id="5791864621-2">do</span><span class="w">
-    </span><span class="n">from</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nc">UserProfile</span><span class="p">,</span><span class="w">
-      </span><span class="ss">select</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5791864621-3">%{</span><span class="w">
-        </span><span class="ss">user_id</span><span class="p">:</span><span class="w"> </span><span class="n">p</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span><span class="w">
-        </span><span class="ss">key</span><span class="p">:</span><span class="w"> </span><span class="n">p</span><span class="o">.</span><span class="n">key</span><span class="p">,</span><span class="w">
-        </span><span class="ss">value</span><span class="p">:</span><span class="w"> </span><span class="n">arg_max</span><span class="p" data-group-id="5791864621-4">(</span><span class="n">p</span><span class="o">.</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="o">.</span><span class="n">timestamp</span><span class="p" data-group-id="5791864621-4">)</span><span class="w">
-      </span><span class="p" data-group-id="5791864621-3">}</span><span class="p">,</span><span class="w">
-      </span><span class="ss">group_by</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5791864621-5">[</span><span class="n">p</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="o">.</span><span class="n">key</span><span class="p" data-group-id="5791864621-5">]</span><span class="w">
-  </span><span class="k" data-group-id="5791864621-2">end</span><span class="w">
+  def latest_values do
+    from p in UserProfile,
+      select: %{
+        user_id: p.user_id,
+        key: p.key,
+        value: arg_max(p.value, p.timestamp)
+      },
+      group_by: [p.user_id, p.key]
+  end
 
-</span><span class="k" data-group-id="5791864621-1">end</span></code></pre>
+end</code></pre>
 <p>
 The cool thing about <code class="inline">fragment</code> is that you can nest it! </p>
-<pre><code class="makeup elixir"><span class="kd">defmacro</span><span class="w"> </span><span class="nf">map</span><span class="p" data-group-id="7218089923-1">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p" data-group-id="7218089923-1">)</span><span class="w"> </span><span class="k" data-group-id="7218089923-2">do</span><span class="w">
-  </span><span class="k">quote</span><span class="w"> </span><span class="k" data-group-id="7218089923-3">do</span><span class="w">
-    </span><span class="n">fragment</span><span class="p" data-group-id="7218089923-4">(</span><span class="s">&quot;map(?, ?)&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">unquote</span><span class="p" data-group-id="7218089923-5">(</span><span class="n">key</span><span class="p" data-group-id="7218089923-5">)</span><span class="p">,</span><span class="w"> </span><span class="k">unquote</span><span class="p" data-group-id="7218089923-6">(</span><span class="n">value</span><span class="p" data-group-id="7218089923-6">)</span><span class="p" data-group-id="7218089923-4">)</span><span class="w">
-  </span><span class="k" data-group-id="7218089923-3">end</span><span class="w">
-</span><span class="k" data-group-id="7218089923-2">end</span><span class="w">
+<pre><code class="elixir">defmacro map(key, value) do
+  quote do
+    fragment(&quot;map(?, ?)&quot;, unquote(key), unquote(value))
+  end
+end
 
-</span><span class="kd">defmacro</span><span class="w"> </span><span class="nf">max_map</span><span class="p" data-group-id="7218089923-7">(</span><span class="n">col</span><span class="p" data-group-id="7218089923-7">)</span><span class="w"> </span><span class="k" data-group-id="7218089923-8">do</span><span class="w">
-  </span><span class="k">quote</span><span class="w"> </span><span class="k" data-group-id="7218089923-9">do</span><span class="w">
-    </span><span class="n">fragment</span><span class="p" data-group-id="7218089923-10">(</span><span class="s">&quot;maxMap(?)&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">unquote</span><span class="p" data-group-id="7218089923-11">(</span><span class="n">col</span><span class="p" data-group-id="7218089923-11">)</span><span class="p" data-group-id="7218089923-10">)</span><span class="w">
-  </span><span class="k" data-group-id="7218089923-9">end</span><span class="w">
-</span><span class="k" data-group-id="7218089923-8">end</span><span class="w">
+defmacro max_map(col) do
+  quote do
+    fragment(&quot;maxMap(?)&quot;, unquote(col))
+  end
+end
 
-</span><span class="kd">def</span><span class="w"> </span><span class="nf">latest_profile</span><span class="w"> </span><span class="k" data-group-id="7218089923-12">do</span><span class="w">
-  </span><span class="n">from</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">subquery</span><span class="p" data-group-id="7218089923-13">(</span><span class="w">
-          </span><span class="n">from</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nc">UserProfile</span><span class="p">,</span><span class="w">
-            </span><span class="ss">select</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="7218089923-14">%{</span><span class="w">
-              </span><span class="ss">user_id</span><span class="p">:</span><span class="w"> </span><span class="n">t</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span><span class="w">
-              </span><span class="ss">attrs</span><span class="p">:</span><span class="w"> </span><span class="n">map</span><span class="p" data-group-id="7218089923-15">(</span><span class="n">t</span><span class="o">.</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">arg_max</span><span class="p" data-group-id="7218089923-16">(</span><span class="n">t</span><span class="o">.</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="n">t</span><span class="o">.</span><span class="n">timestamp</span><span class="p" data-group-id="7218089923-16">)</span><span class="p" data-group-id="7218089923-15">)</span><span class="w">
-            </span><span class="p" data-group-id="7218089923-14">}</span><span class="p">,</span><span class="w">
-            </span><span class="ss">group_by</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="7218089923-17">[</span><span class="n">t</span><span class="o">.</span><span class="n">user_id</span><span class="p" data-group-id="7218089923-17">]</span><span class="w">
-        </span><span class="p" data-group-id="7218089923-13">)</span><span class="p">,</span><span class="w">
-        </span><span class="ss">select</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="7218089923-18">%{</span><span class="w">
-          </span><span class="ss">user_id</span><span class="p">:</span><span class="w"> </span><span class="n">q</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span><span class="w"> 
-          </span><span class="ss">profile</span><span class="p">:</span><span class="w"> </span><span class="n">max_map</span><span class="p" data-group-id="7218089923-19">(</span><span class="n">q</span><span class="o">.</span><span class="n">attrs</span><span class="p" data-group-id="7218089923-19">)</span><span class="w">
-        </span><span class="p" data-group-id="7218089923-18">}</span><span class="w">
-</span><span class="k" data-group-id="7218089923-12">end</span></code></pre>
+def latest_profile do
+  from q in subquery(
+          from t in UserProfile,
+            select: %{
+              user_id: t.user_id,
+              attrs: map(t.key, arg_max(t.value, t.timestamp))
+            },
+            group_by: [t.user_id]
+        ),
+        select: %{
+          user_id: q.user_id, 
+          profile: max_map(q.attrs)
+        }
+end</code></pre>
 <p>
 Now you’ve got Clickhouse rolling up the profiles and you’ll get a map back. Neat! I am going to spend <em>zero</em> time talking about why the function
 in Clickhouse to merge nested maps is <code class="inline">maxMap</code> because <em>I do not know</em>. It simply is. But, you can see that composing these macros makes this super easy and the resulting Ecto query looks very close to what we’d get writing the query by hand. This is an especially useful property when you have a target query you’re working toward and you want to work backward from that into Ecto.</p>
 <p>
 That’s all well and good, but let’s say that you need to do some filtering. Let’s say we want to find the users with a specific profile value for a given key. If you want to filter on the <em>latest</em> values, you could do it with <code class="inline">having</code> (because <code class="inline">argMax</code> is an aggregate we need to use <code class="inline">having</code> not <code class="inline">where</code>):</p>
-<pre><code class="makeup elixir"><span class="na">@spec</span><span class="w"> </span><span class="n">matching_users</span><span class="p" data-group-id="2301220915-1">(</span><span class="nc">String</span><span class="o">.</span><span class="n">t</span><span class="p" data-group-id="2301220915-2">(</span><span class="p" data-group-id="2301220915-2">)</span><span class="p">,</span><span class="w"> </span><span class="nc">String</span><span class="o">.</span><span class="n">t</span><span class="p" data-group-id="2301220915-3">(</span><span class="p" data-group-id="2301220915-3">)</span><span class="p" data-group-id="2301220915-1">)</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="nc">Ecto.Query</span><span class="o">.</span><span class="n">t</span><span class="p" data-group-id="2301220915-4">(</span><span class="p" data-group-id="2301220915-4">)</span><span class="w">
-</span><span class="kd">def</span><span class="w"> </span><span class="nf">matching_users</span><span class="p" data-group-id="2301220915-5">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p" data-group-id="2301220915-5">)</span><span class="w"> </span><span class="k" data-group-id="2301220915-6">do</span><span class="w">
-  </span><span class="n">from</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nc">UserProfile</span><span class="p">,</span><span class="w">
-    </span><span class="ss">select</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="2301220915-7">%{</span><span class="w">
-      </span><span class="ss">user_id</span><span class="p">:</span><span class="w"> </span><span class="n">p</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span><span class="w">
-      </span><span class="ss">key</span><span class="p">:</span><span class="w"> </span><span class="n">p</span><span class="o">.</span><span class="n">key</span><span class="p">,</span><span class="w">
-      </span><span class="ss">value</span><span class="p">:</span><span class="w"> </span><span class="n">arg_max</span><span class="p" data-group-id="2301220915-8">(</span><span class="n">p</span><span class="o">.</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="o">.</span><span class="n">timestamp</span><span class="p" data-group-id="2301220915-8">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">selected_as</span><span class="p" data-group-id="2301220915-9">(</span><span class="ss">:value</span><span class="p" data-group-id="2301220915-9">)</span><span class="w">
-    </span><span class="p" data-group-id="2301220915-7">}</span><span class="p">,</span><span class="w">
-    </span><span class="ss">where</span><span class="p">:</span><span class="w"> </span><span class="n">p</span><span class="o">.</span><span class="n">key</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">^</span><span class="n">key</span><span class="p">,</span><span class="w">
-    </span><span class="ss">group_by</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="2301220915-10">[</span><span class="n">p</span><span class="o">.</span><span class="n">user_id</span><span class="p" data-group-id="2301220915-10">]</span><span class="p">,</span><span class="w">
-    </span><span class="ss">having</span><span class="p">:</span><span class="w"> </span><span class="n">selected_as</span><span class="p" data-group-id="2301220915-11">(</span><span class="ss">:value</span><span class="p" data-group-id="2301220915-11">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">^</span><span class="n">value</span><span class="w">
-</span><span class="k" data-group-id="2301220915-6">end</span></code></pre>
+<pre><code class="elixir">@spec matching_users(String.t(), String.t()) :: Ecto.Query.t()
+def matching_users(key, value) do
+  from p in UserProfile,
+    select: %{
+      user_id: p.user_id,
+      key: p.key,
+      value: arg_max(p.value, p.timestamp) |&gt; selected_as(:value)
+    },
+    where: p.key == ^key,
+    group_by: [p.user_id],
+    having: selected_as(:value) == ^value
+end</code></pre>
 <p>
 However, Clickhouse also provides aggregate combinators that you might want to use, such as <code class="inline">argMaxIfOrNull</code>. This combinator is like <code class="inline">argMax</code> but it has a third argument, a condition.</p>
 <p>
 This leads to my next thing I learned about <code class="inline">fragment</code>: you can pass in an <em>expression</em>.</p>
-<pre><code class="makeup elixir"><span class="kd">defmacro</span><span class="w"> </span><span class="nf">arg_max_if_or_null</span><span class="p" data-group-id="5307841456-1">(</span><span class="n">column</span><span class="p">,</span><span class="w"> </span><span class="n">timestamp</span><span class="p">,</span><span class="w"> </span><span class="n">condition</span><span class="p" data-group-id="5307841456-1">)</span><span class="w"> </span><span class="k" data-group-id="5307841456-2">do</span><span class="w">
-  </span><span class="k">quote</span><span class="w"> </span><span class="k" data-group-id="5307841456-3">do</span><span class="w">
-    </span><span class="n">fragment</span><span class="p" data-group-id="5307841456-4">(</span><span class="s">&quot;argMaxIfOrNull(?, ?, ?)&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">unquote</span><span class="p" data-group-id="5307841456-5">(</span><span class="n">column</span><span class="p" data-group-id="5307841456-5">)</span><span class="p">,</span><span class="w"> </span><span class="k">unquote</span><span class="p" data-group-id="5307841456-6">(</span><span class="n">timestamp</span><span class="p" data-group-id="5307841456-6">)</span><span class="p">,</span><span class="w"> </span><span class="k">unquote</span><span class="p" data-group-id="5307841456-7">(</span><span class="n">condition</span><span class="p" data-group-id="5307841456-7">)</span><span class="p" data-group-id="5307841456-4">)</span><span class="w">
-  </span><span class="k" data-group-id="5307841456-3">end</span><span class="w">
-</span><span class="k" data-group-id="5307841456-2">end</span><span class="w">
+<pre><code class="elixir">defmacro arg_max_if_or_null(column, timestamp, condition) do
+  quote do
+    fragment(&quot;argMaxIfOrNull(?, ?, ?)&quot;, unquote(column), unquote(timestamp), unquote(condition))
+  end
+end
 
-</span><span class="na">@spec</span><span class="w"> </span><span class="n">users_with_latest_values</span><span class="p" data-group-id="5307841456-8">(</span><span class="p" data-group-id="5307841456-9">[</span><span class="nc">String</span><span class="o">.</span><span class="n">t</span><span class="p" data-group-id="5307841456-10">(</span><span class="p" data-group-id="5307841456-10">)</span><span class="p" data-group-id="5307841456-9">]</span><span class="p" data-group-id="5307841456-8">)</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="nc">Ecto.Query</span><span class="o">.</span><span class="n">t</span><span class="p" data-group-id="5307841456-11">(</span><span class="p" data-group-id="5307841456-11">)</span><span class="w">
-</span><span class="kd">def</span><span class="w"> </span><span class="nf">users_with_latest_values</span><span class="p" data-group-id="5307841456-12">(</span><span class="n">attributes</span><span class="p" data-group-id="5307841456-12">)</span><span class="w"> </span><span class="k" data-group-id="5307841456-13">do</span><span class="w">
-  </span><span class="n">query</span><span class="w"> </span><span class="o">=</span><span class="w">
-    </span><span class="n">from</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nc">UserProfile</span><span class="p">,</span><span class="w">
-      </span><span class="ss">select</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5307841456-14">%{</span><span class="ss">user_id</span><span class="p">:</span><span class="w"> </span><span class="n">p</span><span class="o">.</span><span class="n">user_id</span><span class="p" data-group-id="5307841456-14">}</span><span class="p">,</span><span class="w">
-      </span><span class="ss">group_by</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5307841456-15">[</span><span class="n">p</span><span class="o">.</span><span class="n">user_id</span><span class="p" data-group-id="5307841456-15">]</span><span class="w">
+@spec users_with_latest_values([String.t()]) :: Ecto.Query.t()
+def users_with_latest_values(attributes) do
+  query =
+    from p in UserProfile,
+      select: %{user_id: p.user_id},
+      group_by: [p.user_id]
 
-  </span><span class="nc">Enum</span><span class="o">.</span><span class="n">reduce</span><span class="p" data-group-id="5307841456-16">(</span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="n">attributes</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="5307841456-17">fn</span><span class="w"> </span><span class="n">attr</span><span class="p">,</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
-    </span><span class="n">from</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">query</span><span class="p">,</span><span class="w">
-      </span><span class="ss">select_merge</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5307841456-18">%{</span><span class="w">
-        </span><span class="o">^</span><span class="n">attr</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="n">arg_max_if_or_null</span><span class="p" data-group-id="5307841456-19">(</span><span class="n">q</span><span class="o">.</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="o">.</span><span class="n">timestamp</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="o">.</span><span class="n">key</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">^</span><span class="n">attr</span><span class="p" data-group-id="5307841456-19">)</span><span class="w">
-      </span><span class="p" data-group-id="5307841456-18">}</span><span class="w">
-  </span><span class="k" data-group-id="5307841456-17">end</span><span class="p" data-group-id="5307841456-16">)</span><span class="w">
-</span><span class="k" data-group-id="5307841456-13">end</span></code></pre>
+  Enum.reduce(query, attributes, fn attr, query -&gt;
+    from q in query,
+      select_merge: %{
+        ^attr =&gt; arg_max_if_or_null(q.value, q.timestamp, q.key == ^attr)
+      }
+  end)
+end</code></pre>
 <p>
 As you can see, the third “argument” to <code class="inline">arg_max_if_or_null</code> is an expression, but it gets interpolated into <code class="inline">?</code> inside <code class="inline">fragment</code>. Incredible! This <em>just works!</em> When I figured this out, it really blew my mind, and I don’t think the docs mention it at all.</p>
 <h2>
@@ -154,46 +154,46 @@ You can pass <code class="inline">with_cte</code> a string!</h3>
 <p>
 The docs for <a href="https://hexdocs.pm/ecto/Ecto.Query.html#with_cte/3">with_cte</a> don’t say you can do this, but you can just name your CTE parts directly, with a string. This is a version
 of the query from above, but using a CTE. Let’s make it a little more interesting of a query, and say we also need to go get the latest event for each of those users in order to sort the data and return the latest timestamp.</p>
-<pre><code class="makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">NeatEcto.Schemas.Events</span><span class="w"> </span><span class="k" data-group-id="0729953314-1">do</span><span class="w">
-  </span><span class="kn">use</span><span class="w"> </span><span class="nc">Ecto.Schema</span><span class="w">
+<pre><code class="elixir">defmodule NeatEcto.Schemas.Events do
+  use Ecto.Schema
 
-  </span><span class="n">schema</span><span class="w"> </span><span class="s">&quot;events&quot;</span><span class="w"> </span><span class="k" data-group-id="0729953314-2">do</span><span class="w">
-    </span><span class="n">field</span><span class="w"> </span><span class="ss">:user_id</span><span class="p">,</span><span class="w"> </span><span class="ss">:string</span><span class="w">
-    </span><span class="n">field</span><span class="w"> </span><span class="ss">:event_type</span><span class="p">,</span><span class="w"> </span><span class="ss">:string</span><span class="w">
-    </span><span class="n">field</span><span class="w"> </span><span class="ss">:timestamp</span><span class="p">,</span><span class="w"> </span><span class="nc">Ch</span><span class="p">,</span><span class="w"> </span><span class="ss">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;DateTime64(3)&quot;</span><span class="w">
-  </span><span class="k" data-group-id="0729953314-2">end</span><span class="w">
-</span><span class="k" data-group-id="0729953314-1">end</span><span class="w">
+  schema &quot;events&quot; do
+    field :user_id, :string
+    field :event_type, :string
+    field :timestamp, Ch, type: &quot;DateTime64(3)&quot;
+  end
+end
 
 
-</span><span class="kd">def</span><span class="w"> </span><span class="nf">latest_profile_cte_version</span><span class="w"> </span><span class="k" data-group-id="0729953314-3">do</span><span class="w">
-  </span><span class="n">attrs_query</span><span class="w"> </span><span class="o">=</span><span class="w">
-    </span><span class="n">from</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nc">UserProfile</span><span class="p">,</span><span class="w">
-      </span><span class="ss">select</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="0729953314-4">%{</span><span class="w">
-        </span><span class="ss">user_id</span><span class="p">:</span><span class="w"> </span><span class="n">t</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span><span class="w">
-        </span><span class="ss">attrs</span><span class="p">:</span><span class="w"> </span><span class="n">map</span><span class="p" data-group-id="0729953314-5">(</span><span class="n">t</span><span class="o">.</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">arg_max</span><span class="p" data-group-id="0729953314-6">(</span><span class="n">t</span><span class="o">.</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="n">t</span><span class="o">.</span><span class="n">timestamp</span><span class="p" data-group-id="0729953314-6">)</span><span class="p" data-group-id="0729953314-5">)</span><span class="w">
-      </span><span class="p" data-group-id="0729953314-4">}</span><span class="p">,</span><span class="w">
-      </span><span class="ss">group_by</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="0729953314-7">[</span><span class="n">t</span><span class="o">.</span><span class="n">user_id</span><span class="p" data-group-id="0729953314-7">]</span><span class="w">
+def latest_profile_cte_version do
+  attrs_query =
+    from t in UserProfile,
+      select: %{
+        user_id: t.user_id,
+        attrs: map(t.key, arg_max(t.value, t.timestamp))
+      },
+      group_by: [t.user_id]
 
-  </span><span class="n">latest_events_query</span><span class="w"> </span><span class="o">=</span><span class="w">
-    </span><span class="n">from</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nc">Events</span><span class="p">,</span><span class="w">
-      </span><span class="ss">select</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="0729953314-8">%{</span><span class="w">
-        </span><span class="ss">user_id</span><span class="p">:</span><span class="w"> </span><span class="n">e</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span><span class="w">
-        </span><span class="ss">latest_timestamp</span><span class="p">:</span><span class="w"> </span><span class="n">max</span><span class="p" data-group-id="0729953314-9">(</span><span class="n">e</span><span class="o">.</span><span class="n">timestamp</span><span class="p" data-group-id="0729953314-9">)</span><span class="w">
-      </span><span class="p" data-group-id="0729953314-8">}</span><span class="p">,</span><span class="w">
-      </span><span class="ss">group_by</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="0729953314-10">[</span><span class="n">e</span><span class="o">.</span><span class="n">user_id</span><span class="p" data-group-id="0729953314-10">]</span><span class="w">
+  latest_events_query =
+    from e in Events,
+      select: %{
+        user_id: e.user_id,
+        latest_timestamp: max(e.timestamp)
+      },
+      group_by: [e.user_id]
 
-  </span><span class="s">&quot;attr_pairs&quot;</span><span class="w">
-  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">with_cte</span><span class="p" data-group-id="0729953314-11">(</span><span class="s">&quot;attr_pairs&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">as</span><span class="p">:</span><span class="w"> </span><span class="o">^</span><span class="n">attrs_query</span><span class="p" data-group-id="0729953314-11">)</span><span class="w">
-  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">with_cte</span><span class="p" data-group-id="0729953314-12">(</span><span class="s">&quot;latest_events&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">as</span><span class="p">:</span><span class="w"> </span><span class="o">^</span><span class="n">latest_events_query</span><span class="p" data-group-id="0729953314-12">)</span><span class="w">
-  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">join</span><span class="p" data-group-id="0729953314-13">(</span><span class="ss">:inner</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="0729953314-14">[</span><span class="n">a</span><span class="p" data-group-id="0729953314-14">]</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="s">&quot;latest_events&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">on</span><span class="p">:</span><span class="w"> </span><span class="n">a</span><span class="o">.</span><span class="n">user_id</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">e</span><span class="o">.</span><span class="n">user_id</span><span class="p" data-group-id="0729953314-13">)</span><span class="w">
-  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">select</span><span class="p" data-group-id="0729953314-15">(</span><span class="p" data-group-id="0729953314-16">[</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p" data-group-id="0729953314-16">]</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="0729953314-17">%{</span><span class="w">
-    </span><span class="ss">user_id</span><span class="p">:</span><span class="w"> </span><span class="n">a</span><span class="o">.</span><span class="n">user_id</span><span class="p">,</span><span class="w">
-    </span><span class="ss">latest_event</span><span class="p">:</span><span class="w"> </span><span class="n">e</span><span class="o">.</span><span class="n">latest_timestamp</span><span class="p">,</span><span class="w">
-    </span><span class="ss">profile</span><span class="p">:</span><span class="w"> </span><span class="n">max_map</span><span class="p" data-group-id="0729953314-18">(</span><span class="n">a</span><span class="o">.</span><span class="n">attrs</span><span class="p" data-group-id="0729953314-18">)</span><span class="w">
-  </span><span class="p" data-group-id="0729953314-17">}</span><span class="p" data-group-id="0729953314-15">)</span><span class="w">
-  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">order_by</span><span class="p" data-group-id="0729953314-19">(</span><span class="p" data-group-id="0729953314-20">[</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p" data-group-id="0729953314-20">]</span><span class="p">,</span><span class="w"> </span><span class="ss">desc</span><span class="p">:</span><span class="w"> </span><span class="n">e</span><span class="o">.</span><span class="n">timestamp</span><span class="p" data-group-id="0729953314-19">)</span><span class="w">
-  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">group_by</span><span class="p" data-group-id="0729953314-21">(</span><span class="p" data-group-id="0729953314-22">[</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p" data-group-id="0729953314-22">]</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="0729953314-23">[</span><span class="n">a</span><span class="o">.</span><span class="n">user_id</span><span class="p" data-group-id="0729953314-23">]</span><span class="p" data-group-id="0729953314-21">)</span><span class="w">
-</span><span class="k" data-group-id="0729953314-3">end</span></code></pre>
+  &quot;attr_pairs&quot;
+  |&gt; with_cte(&quot;attr_pairs&quot;, as: ^attrs_query)
+  |&gt; with_cte(&quot;latest_events&quot;, as: ^latest_events_query)
+  |&gt; join(:inner, [a], e in &quot;latest_events&quot;, on: a.user_id == e.user_id)
+  |&gt; select([a, e], %{
+    user_id: a.user_id,
+    latest_event: e.latest_timestamp,
+    profile: max_map(a.attrs)
+  })
+  |&gt; order_by([a, e], desc: e.timestamp)
+  |&gt; group_by([a, e], [a.user_id])
+end</code></pre>
 <p>
 Of course, you could join on a subquery here, but I’m just trying to illustrate the specifics of using a CTE. It’s totally possible to dynamically build CTEs and that can be a super useful tool in building complex queries.</p>
 <h2>
@@ -201,35 +201,35 @@ Cheating</h2>
 <p>
 Ok this last one is a little dirty. Maybe even <em>yucky</em>. Ecto expects that the developer is in charge of the naming of things and that those names are mostly available at compile time. There are few places where you can essentially allow for using
 user input to name things (CTEs being one!), mostly you need to be using atoms, and every BEAM developer knows you shouldn’t dynamically create atoms because they’re never GC’d. That leads us to the following trick:</p>
-<pre><code class="makeup elixir"><span class="c1"># Everything in life needs a limit</span><span class="w">
-</span><span class="na">@substitutions</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="ss">into</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="1590520612-1">%{</span><span class="p" data-group-id="1590520612-1">}</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="1590520612-2">{</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="ss">:&quot;subs_</span><span class="si" data-group-id="1590520612-3">#{</span><span class="n">i</span><span class="si" data-group-id="1590520612-3">}</span><span class="ss">&quot;</span><span class="p" data-group-id="1590520612-2">}</span><span class="w">
-</span><span class="kd">def</span><span class="w"> </span><span class="nf">substitutions</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="na">@substitutions</span><span class="w">
+<pre><code class="elixir"># Everything in life needs a limit
+@substitutions for i &lt;- 0..100, into: %{}, do: {i, :&quot;subs_#{i}&quot;}
+def substitutions, do: @substitutions
 
-</span><span class="na">@spec</span><span class="w"> </span><span class="n">latest_profiles</span><span class="p" data-group-id="1590520612-4">(</span><span class="p" data-group-id="1590520612-5">[</span><span class="nc">String</span><span class="o">.</span><span class="n">t</span><span class="p" data-group-id="1590520612-6">(</span><span class="p" data-group-id="1590520612-6">)</span><span class="p" data-group-id="1590520612-5">]</span><span class="p" data-group-id="1590520612-4">)</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="nc">Ecto.Query</span><span class="o">.</span><span class="n">t</span><span class="p" data-group-id="1590520612-7">(</span><span class="p" data-group-id="1590520612-7">)</span><span class="w">
-</span><span class="kd">def</span><span class="w"> </span><span class="nf">latest_profiles</span><span class="p" data-group-id="1590520612-8">(</span><span class="n">keys</span><span class="p" data-group-id="1590520612-8">)</span><span class="w"> </span><span class="k" data-group-id="1590520612-9">do</span><span class="w">
-  </span><span class="n">substitutions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">substitutions</span><span class="p" data-group-id="1590520612-10">(</span><span class="p" data-group-id="1590520612-10">)</span><span class="w">
-  </span><span class="n">base_query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nc">UserProfile</span><span class="p">,</span><span class="w"> </span><span class="ss">select</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="1590520612-11">%{</span><span class="ss">user_id</span><span class="p">:</span><span class="w"> </span><span class="n">u</span><span class="o">.</span><span class="n">user_id</span><span class="p" data-group-id="1590520612-11">}</span><span class="w">
+@spec latest_profiles([String.t()]) :: Ecto.Query.t()
+def latest_profiles(keys) do
+  substitutions = substitutions()
+  base_query = from u in UserProfile, select: %{user_id: u.user_id}
 
-  </span><span class="n">indexed_keys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Enum</span><span class="o">.</span><span class="n">with_index</span><span class="p" data-group-id="1590520612-12">(</span><span class="n">keys</span><span class="p" data-group-id="1590520612-12">)</span><span class="w">
+  indexed_keys = Enum.with_index(keys)
 
-  </span><span class="n">placeholders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="p" data-group-id="1590520612-13">{</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p" data-group-id="1590520612-13">}</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">indexed_keys</span><span class="p">,</span><span class="w"> </span><span class="ss">into</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="1590520612-14">%{</span><span class="p" data-group-id="1590520612-14">}</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="1590520612-15">{</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">substitutions</span><span class="p" data-group-id="1590520612-16">[</span><span class="n">i</span><span class="p" data-group-id="1590520612-16">]</span><span class="p" data-group-id="1590520612-15">}</span><span class="w">
+  placeholders = for {name, i} &lt;- indexed_keys, into: %{}, do: {name, substitutions[i]}
 
-  </span><span class="n">query</span><span class="w"> </span><span class="o">=</span><span class="w">
-    </span><span class="nc">Enum</span><span class="o">.</span><span class="n">reduce</span><span class="p" data-group-id="1590520612-17">(</span><span class="n">indexed_keys</span><span class="p">,</span><span class="w"> </span><span class="n">base_query</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="1590520612-18">fn</span><span class="w"> </span><span class="p" data-group-id="1590520612-19">{</span><span class="n">prop</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p" data-group-id="1590520612-19">}</span><span class="p">,</span><span class="w"> </span><span class="n">query</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
-      </span><span class="n">prop_placeholder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">placeholders</span><span class="p" data-group-id="1590520612-20">[</span><span class="n">i</span><span class="p" data-group-id="1590520612-20">]</span><span class="w">
+  query =
+    Enum.reduce(indexed_keys, base_query, fn {prop, i}, query -&gt;
+      prop_placeholder = placeholders[i]
 
-      </span><span class="n">select_merge</span><span class="p" data-group-id="1590520612-21">(</span><span class="w">
-        </span><span class="n">query</span><span class="p">,</span><span class="w">
-        </span><span class="p" data-group-id="1590520612-22">[</span><span class="n">p</span><span class="p" data-group-id="1590520612-22">]</span><span class="p">,</span><span class="w">
-        </span><span class="p" data-group-id="1590520612-23">%{</span><span class="w">
-          </span><span class="o">^</span><span class="n">prop_placeholder</span><span class="w"> </span><span class="p">=&gt;</span><span class="w">
-            </span><span class="n">arg_max_if_or_null</span><span class="p" data-group-id="1590520612-24">(</span><span class="n">p</span><span class="o">.</span><span class="n">attribute_value</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="o">.</span><span class="n">timestamp</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="o">.</span><span class="n">attribute_name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">^</span><span class="n">prop</span><span class="p" data-group-id="1590520612-24">)</span><span class="w">
-        </span><span class="p" data-group-id="1590520612-23">}</span><span class="w">
-      </span><span class="p" data-group-id="1590520612-21">)</span><span class="w">
-    </span><span class="k" data-group-id="1590520612-18">end</span><span class="p" data-group-id="1590520612-17">)</span><span class="w">
+      select_merge(
+        query,
+        [p],
+        %{
+          ^prop_placeholder =&gt;
+            arg_max_if_or_null(p.attribute_value, p.timestamp, p.attribute_name == ^prop)
+        }
+      )
+    end)
 
-  </span><span class="p" data-group-id="1590520612-25">{</span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="n">placeholders</span><span class="p" data-group-id="1590520612-25">}</span><span class="w">
-</span><span class="k" data-group-id="1590520612-9">end</span></code></pre>
+  {query, placeholders}
+end</code></pre>
 <p>
 What you <em>can</em> do is map your user provided list of strings to a list of atoms and then just hand back the mapping along with the query. Then, some enterprising developer could use the above <code class="inline">latest_profiles</code> query inside 
 a subquery. This is really useful if you need to make sure that you’re able to compare on the results of the subquery externally and to make sure that the subquery only gets executed once. This technique can also be useful

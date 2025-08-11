@@ -36,44 +36,44 @@ So, if you do something like <code class="inline">Repo.get(queryable) |&gt; Repo
 How do you solve it? More functions!</p>
 <h2>
 The Solution</h2>
-<pre><code class="makeup elixir"><span class="kd">def</span><span class="w"> </span><span class="nf">get_thing</span><span class="p" data-group-id="9818456610-1">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">opts</span><span class="w"> </span><span class="o">\\</span><span class="w"> </span><span class="p" data-group-id="9818456610-2">[</span><span class="p" data-group-id="9818456610-2">]</span><span class="p" data-group-id="9818456610-1">)</span><span class="w"> </span><span class="k" data-group-id="9818456610-3">do</span><span class="w">
-  </span><span class="n">from</span><span class="p" data-group-id="9818456610-4">(</span><span class="n">t</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nc">Thing</span><span class="p">,</span><span class="w"> </span><span class="ss">where</span><span class="p">:</span><span class="w"> </span><span class="n">t</span><span class="o">.</span><span class="n">id</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">^</span><span class="n">id</span><span class="p" data-group-id="9818456610-4">)</span><span class="w">
-  </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">preload</span><span class="p" data-group-id="9818456610-5">(</span><span class="n">opts</span><span class="p" data-group-id="9818456610-6">[</span><span class="ss">:preload</span><span class="p" data-group-id="9818456610-6">]</span><span class="p" data-group-id="9818456610-5">)</span><span class="w">
-  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Repo</span><span class="o">.</span><span class="n">one</span><span class="p" data-group-id="9818456610-7">(</span><span class="p" data-group-id="9818456610-7">)</span><span class="w">
-</span><span class="k" data-group-id="9818456610-3">end</span><span class="w">
+<pre><code class="elixir">def get_thing(id, opts \\ []) do
+  from(t in Thing, where: t.id == ^id)
+  |&gt; preload(opts[:preload])
+  |&gt; Repo.one()
+end
 
-</span><span class="kd">defp</span><span class="w"> </span><span class="nf">preload</span><span class="p" data-group-id="9818456610-8">(</span><span class="n">query</span><span class="p" data-group-id="9818456610-8">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="n">preload</span><span class="p" data-group-id="9818456610-9">(</span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="no">true</span><span class="p" data-group-id="9818456610-9">)</span><span class="w">
-</span><span class="kd">defp</span><span class="w"> </span><span class="nf">preload</span><span class="p" data-group-id="9818456610-10">(</span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="no">nil</span><span class="p" data-group-id="9818456610-10">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="n">query</span><span class="w">
+defp preload(query), do: preload(query, true)
+defp preload(query, nil), do: query
 
-</span><span class="kd">defp</span><span class="w"> </span><span class="nf">preload</span><span class="p" data-group-id="9818456610-11">(</span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="no">true</span><span class="p" data-group-id="9818456610-11">)</span><span class="w"> </span><span class="k" data-group-id="9818456610-12">do</span><span class="w">
-  </span><span class="n">from</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">query</span><span class="p">,</span><span class="w"> 
-    </span><span class="ss">left_join</span><span class="p">:</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">assoc</span><span class="p" data-group-id="9818456610-13">(</span><span class="n">q</span><span class="p">,</span><span class="w"> </span><span class="ss">:thing</span><span class="p" data-group-id="9818456610-13">)</span><span class="p">,</span><span class="w">
-    </span><span class="ss">left_join</span><span class="p">:</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">assoc</span><span class="p" data-group-id="9818456610-14">(</span><span class="n">t</span><span class="p">,</span><span class="w"> </span><span class="ss">:sub_thing</span><span class="p" data-group-id="9818456610-14">)</span><span class="p">,</span><span class="w">
-    </span><span class="ss">preload</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="9818456610-15">[</span><span class="w">
-      </span><span class="ss">thing</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="9818456610-16">{</span><span class="n">t</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="9818456610-17">[</span><span class="ss">sub_thing</span><span class="p">:</span><span class="w"> </span><span class="n">s</span><span class="p" data-group-id="9818456610-17">]</span><span class="p" data-group-id="9818456610-16">}</span><span class="w">
-    </span><span class="p" data-group-id="9818456610-15">]</span><span class="p">,</span><span class="w">
-    </span><span class="ss">order_by</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="9818456610-18">[</span><span class="ss">asc</span><span class="p">:</span><span class="w"> </span><span class="n">t</span><span class="o">.</span><span class="n">index</span><span class="p" data-group-id="9818456610-18">]</span><span class="w">
-</span><span class="p">]</span><span class="w">
-</span><span class="k" data-group-id="9818456610-12">end</span><span class="w">
+defp preload(query, true) do
+  from q in query, 
+    left_join: t in assoc(q, :thing),
+    left_join: s in assoc(t, :sub_thing),
+    preload: [
+      thing: {t, [sub_thing: s]}
+    ],
+    order_by: [asc: t.index]
+]
+end
 
-</span><span class="kd">defp</span><span class="w"> </span><span class="nf">preload</span><span class="p" data-group-id="9818456610-19">(</span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="n">preloads</span><span class="p" data-group-id="9818456610-19">)</span><span class="w"> </span><span class="k" data-group-id="9818456610-20">do</span><span class="w">
-  </span><span class="n">from</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="ss">preload</span><span class="p">:</span><span class="w"> </span><span class="o">^</span><span class="n">preloads</span><span class="w">
-</span><span class="k" data-group-id="9818456610-20">end</span></code></pre>
+defp preload(query, preloads) do
+  from q in query, preload: ^preloads
+end</code></pre>
 <p>
 Edit: I made a mistake here originally. Thanks to <a href="https://twitter.com/atomkirk">@AtomKirk</a> for pointing it out!</p>
 <p>
 What I had originally was:</p>
-<pre><code class="makeup elixir"><span class="kd">def</span><span class="w"> </span><span class="nf">preload</span><span class="p" data-group-id="9985035790-1">(</span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="no">true</span><span class="p" data-group-id="9985035790-1">)</span><span class="w"> </span><span class="k" data-group-id="9985035790-2">do</span><span class="w">
-  </span><span class="n">from</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="ss">preload</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="9985035790-3">[</span><span class="w">
-    </span><span class="ss">:association</span><span class="p">,</span><span class="w">
-    </span><span class="ss">other_assoc</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="9985035790-4">[</span><span class="ss">:sub_assoc</span><span class="p" data-group-id="9985035790-4">]</span><span class="w">
-  </span><span class="p" data-group-id="9985035790-3">]</span><span class="w">
-</span><span class="k" data-group-id="9985035790-2">end</span></code></pre>
+<pre><code class="elixir">def preload(query, true) do
+  from q in query, preload: [
+    :association,
+    other_assoc: [:sub_assoc]
+  ]
+end</code></pre>
 <p>
 However, this is incorrect. The correct way to do this is to use the <code class="inline">left_join</code> with <code class="inline">assoc</code> functions.</p>
 <p>
 What I described originally was how <a href="https://ash-hq.org/">Ash</a> does it. In Ash, you’d do something like:</p>
-<pre><code class="makeup elixir"><span class="nc">Ash</span><span class="o">.</span><span class="n">get!</span><span class="p" data-group-id="4038723532-1">(</span><span class="nc">Thing</span><span class="p">,</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="ss">load</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4038723532-2">[</span><span class="ss">:association</span><span class="p">,</span><span class="w"> </span><span class="ss">other_assoc</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4038723532-3">[</span><span class="ss">:sub_assoc</span><span class="p" data-group-id="4038723532-3">]</span><span class="p" data-group-id="4038723532-2">]</span><span class="p" data-group-id="4038723532-1">)</span></code></pre>
+<pre><code class="elixir">Ash.get!(Thing, id, load: [:association, other_assoc: [:sub_assoc]])</code></pre>
 <p>
 For a more explicit example, check out <a href="https://github.com/andyleclair/garage/blob/main/lib/garage_web/live/builds_live/show.ex#L197">this code here</a></p>
 

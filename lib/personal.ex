@@ -8,15 +8,15 @@ defmodule Personal do
     ~H"""
     <.layout>
       <:head>
-        <title><%= @post.title %></title>
+        <title>{@post.title}</title>
         <meta name="description" content={@post.description} />
       </:head>
       <article class="mx-auto prose sm:prose-sm md:prose-md lg:prose-xl prose-pre:bg-codebg">
-        <h1><%= @post.title %></h1>
-        <h3><%= @post.description %></h3>
+        <h1>{@post.title}</h1>
+        <h3>{@post.description}</h3>
         <h3><a href={@post.related_listening}>Related Listening</a></h3>
-        <p class="text-smurf-blood">Posted on <%= @post.date %></p>
-        <%= raw(@post.body) %>
+        <p class="text-smurf-blood">Posted on {@post.date}</p>
+        {raw(@post.body)}
       </article>
     </.layout>
     """
@@ -32,7 +32,7 @@ defmodule Personal do
       <h2 class="text-xl">Blog!</h2>
       <ul>
         <li :for={post <- @posts}>
-          <%= post.date %> - <a href={post.path}><%= post.title %></a>
+          {post.date} - <a href={post.path}>{post.title}</a>
         </li>
       </ul>
     </.layout>
@@ -50,7 +50,7 @@ defmodule Personal do
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/assets/app.css" />
         <script type="text/javascript" src="/assets/app.js" />
-        <%= render_slot(@head) %>
+        {render_slot(@head)}
       </head>
 
       <body class="bg-nor-easter text-smurf-blood">
@@ -58,8 +58,8 @@ defmodule Personal do
           <header class="bg-bludacris p-10 my-4 lg:mt-10 lg:mb-14">
             <h1><a href={url()}>andy@andyleclair.dev</a>$><span class="blink">_</span></h1>
           </header>
-          <main class="container mx-auto relative grow min-h-96 flex-1 p-4 items-center">
-            <%= render_slot(@inner_block) %>
+          <main class="flex flex-col mx-auto relative grow min-h-96 flex-1 p-4 justify-items-center">
+            {render_slot(@inner_block)}
           </main>
           <footer class="mt-24 bg-bludacris p-4 text-center">
             © Andy LeClair 2024 | <a href="/atom.xml">Atom</a> | <a href="/feed.xml">RSS</a>

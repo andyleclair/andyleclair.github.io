@@ -16,7 +16,7 @@
       <header class="bg-bludacris p-10 my-4 lg:mt-10 lg:mb-14">
         <h1><a href="https://andyleclair.dev/">andy@andyleclair.dev</a>$><span class="blink">_</span></h1>
       </header>
-      <main class="container mx-auto relative grow min-h-96 flex-1 p-4 items-center">
+      <main class="flex flex-col mx-auto relative grow min-h-96 flex-1 p-4 justify-items-center">
         
   <article class="mx-auto prose sm:prose-sm md:prose-md lg:prose-xl prose-pre:bg-codebg">
     <h1>OpenGL Part 3</h1>
@@ -25,287 +25,287 @@
     <p class="text-smurf-blood">Posted on 2024-09-11</p>
     <p>
 Continuing on, I wanted to try the exercises at the bottom of <a href="https://learnopengl.com/Getting-started/Hello-Triangle">this chapter</a>, and this is what I came up with.</p>
-<pre><code class="elixir">defmodule GlTest.Window do
-  import WxRecords
+<pre><code class="makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">GlTest.Window</span><span class="w"> </span><span class="k" data-group-id="8437164353-1">do</span><span class="w">
+  </span><span class="kn">import</span><span class="w"> </span><span class="nc">WxRecords</span><span class="w">
 
-  @behaviour :wx_object
+  </span><span class="na">@behaviour</span><span class="w"> </span><span class="ss">:wx_object</span><span class="w">
 
-  def start_link(_) do
-    :wx_object.start_link(__MODULE__, [], [])
-    {:ok, self()}
-  end
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">start_link</span><span class="p" data-group-id="8437164353-2">(</span><span class="bp">_</span><span class="p" data-group-id="8437164353-2">)</span><span class="w"> </span><span class="k" data-group-id="8437164353-3">do</span><span class="w">
+    </span><span class="nc">:wx_object</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="8437164353-4">(</span><span class="bp">__MODULE__</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8437164353-5">[</span><span class="p" data-group-id="8437164353-5">]</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8437164353-6">[</span><span class="p" data-group-id="8437164353-6">]</span><span class="p" data-group-id="8437164353-4">)</span><span class="w">
+    </span><span class="p" data-group-id="8437164353-7">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">self</span><span class="p" data-group-id="8437164353-8">(</span><span class="p" data-group-id="8437164353-8">)</span><span class="p" data-group-id="8437164353-7">}</span><span class="w">
+  </span><span class="k" data-group-id="8437164353-3">end</span><span class="w">
 
-  @impl :wx_object
-  def init(_) do
-    opts = [size: {800, 600}]
-    wx = :wx.new()
-    frame = :wxFrame.new(wx, :wx_const.wx_id_any(), ~c&quot;Hello&quot;, opts)
+  </span><span class="na">@impl</span><span class="w"> </span><span class="ss">:wx_object</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">init</span><span class="p" data-group-id="8437164353-9">(</span><span class="bp">_</span><span class="p" data-group-id="8437164353-9">)</span><span class="w"> </span><span class="k" data-group-id="8437164353-10">do</span><span class="w">
+    </span><span class="n">opts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="8437164353-11">[</span><span class="ss">size</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="8437164353-12">{</span><span class="mi">800</span><span class="p">,</span><span class="w"> </span><span class="mi">600</span><span class="p" data-group-id="8437164353-12">}</span><span class="p" data-group-id="8437164353-11">]</span><span class="w">
+    </span><span class="n">wx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">:wx</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="8437164353-13">(</span><span class="p" data-group-id="8437164353-13">)</span><span class="w">
+    </span><span class="n">frame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">:wxFrame</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="8437164353-14">(</span><span class="n">wx</span><span class="p">,</span><span class="w"> </span><span class="nc">:wx_const</span><span class="o">.</span><span class="n">wx_id_any</span><span class="p" data-group-id="8437164353-15">(</span><span class="p" data-group-id="8437164353-15">)</span><span class="p">,</span><span class="w"> </span><span class="s">~c&quot;Hello&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">opts</span><span class="p" data-group-id="8437164353-14">)</span><span class="w">
 
-    :wxWindow.connect(frame, :close_window)
-    :wxFrame.show(frame)
+    </span><span class="nc">:wxWindow</span><span class="o">.</span><span class="n">connect</span><span class="p" data-group-id="8437164353-16">(</span><span class="n">frame</span><span class="p">,</span><span class="w"> </span><span class="ss">:close_window</span><span class="p" data-group-id="8437164353-16">)</span><span class="w">
+    </span><span class="nc">:wxFrame</span><span class="o">.</span><span class="n">show</span><span class="p" data-group-id="8437164353-17">(</span><span class="n">frame</span><span class="p" data-group-id="8437164353-17">)</span><span class="w">
 
-    gl_attrib = [
-      attribList: [
-        :wx_const.wx_gl_core_profile(),
-        :wx_const.wx_gl_major_version(),
-        3,
-        :wx_const.wx_gl_minor_version(),
-        3,
-        :wx_const.wx_gl_doublebuffer(),
-        0
-      ]
-    ]
+    </span><span class="n">gl_attrib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="8437164353-18">[</span><span class="w">
+      </span><span class="ss">attribList</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="8437164353-19">[</span><span class="w">
+        </span><span class="nc">:wx_const</span><span class="o">.</span><span class="n">wx_gl_core_profile</span><span class="p" data-group-id="8437164353-20">(</span><span class="p" data-group-id="8437164353-20">)</span><span class="p">,</span><span class="w">
+        </span><span class="nc">:wx_const</span><span class="o">.</span><span class="n">wx_gl_major_version</span><span class="p" data-group-id="8437164353-21">(</span><span class="p" data-group-id="8437164353-21">)</span><span class="p">,</span><span class="w">
+        </span><span class="mi">3</span><span class="p">,</span><span class="w">
+        </span><span class="nc">:wx_const</span><span class="o">.</span><span class="n">wx_gl_minor_version</span><span class="p" data-group-id="8437164353-22">(</span><span class="p" data-group-id="8437164353-22">)</span><span class="p">,</span><span class="w">
+        </span><span class="mi">3</span><span class="p">,</span><span class="w">
+        </span><span class="nc">:wx_const</span><span class="o">.</span><span class="n">wx_gl_doublebuffer</span><span class="p" data-group-id="8437164353-23">(</span><span class="p" data-group-id="8437164353-23">)</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="w">
+      </span><span class="p" data-group-id="8437164353-19">]</span><span class="w">
+    </span><span class="p" data-group-id="8437164353-18">]</span><span class="w">
 
-    canvas = :wxGLCanvas.new(frame, opts ++ gl_attrib)
-    ctx = :wxGLContext.new(canvas)
-    :wxGLCanvas.setCurrent(canvas, ctx)
+    </span><span class="n">canvas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">:wxGLCanvas</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="8437164353-24">(</span><span class="n">frame</span><span class="p">,</span><span class="w"> </span><span class="n">opts</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">gl_attrib</span><span class="p" data-group-id="8437164353-24">)</span><span class="w">
+    </span><span class="n">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">:wxGLContext</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="8437164353-25">(</span><span class="n">canvas</span><span class="p" data-group-id="8437164353-25">)</span><span class="w">
+    </span><span class="nc">:wxGLCanvas</span><span class="o">.</span><span class="n">setCurrent</span><span class="p" data-group-id="8437164353-26">(</span><span class="n">canvas</span><span class="p">,</span><span class="w"> </span><span class="n">ctx</span><span class="p" data-group-id="8437164353-26">)</span><span class="w">
 
-    {shader_program, vao1, vao2, rect_vao} = init_opengl()
-    frame_counter = :counters.new(1, [:atomics])
+    </span><span class="p" data-group-id="8437164353-27">{</span><span class="n">shader_program</span><span class="p">,</span><span class="w"> </span><span class="n">vao1</span><span class="p">,</span><span class="w"> </span><span class="n">vao2</span><span class="p">,</span><span class="w"> </span><span class="n">rect_vao</span><span class="p" data-group-id="8437164353-27">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">init_opengl</span><span class="p" data-group-id="8437164353-28">(</span><span class="p" data-group-id="8437164353-28">)</span><span class="w">
+    </span><span class="n">frame_counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">:counters</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="8437164353-29">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8437164353-30">[</span><span class="ss">:atomics</span><span class="p" data-group-id="8437164353-30">]</span><span class="p" data-group-id="8437164353-29">)</span><span class="w">
 
-    send(self(), :update)
-    now = System.monotonic_time(:millisecond)
+    </span><span class="n">send</span><span class="p" data-group-id="8437164353-31">(</span><span class="n">self</span><span class="p" data-group-id="8437164353-32">(</span><span class="p" data-group-id="8437164353-32">)</span><span class="p">,</span><span class="w"> </span><span class="ss">:update</span><span class="p" data-group-id="8437164353-31">)</span><span class="w">
+    </span><span class="n">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">System</span><span class="o">.</span><span class="n">monotonic_time</span><span class="p" data-group-id="8437164353-33">(</span><span class="ss">:millisecond</span><span class="p" data-group-id="8437164353-33">)</span><span class="w">
 
-    {frame,
-     %{
-       last_time: now,
-       frame: frame,
-       frame_counter: frame_counter,
-       canvas: canvas,
-       shader_program: shader_program,
-       fps: 0,
-       vao1: vao1,
-       vao2: vao2,
-       rect_vao: rect_vao
-     }}
-  end
+    </span><span class="p" data-group-id="8437164353-34">{</span><span class="n">frame</span><span class="p">,</span><span class="w">
+     </span><span class="p" data-group-id="8437164353-35">%{</span><span class="w">
+       </span><span class="ss">last_time</span><span class="p">:</span><span class="w"> </span><span class="n">now</span><span class="p">,</span><span class="w">
+       </span><span class="ss">frame</span><span class="p">:</span><span class="w"> </span><span class="n">frame</span><span class="p">,</span><span class="w">
+       </span><span class="ss">frame_counter</span><span class="p">:</span><span class="w"> </span><span class="n">frame_counter</span><span class="p">,</span><span class="w">
+       </span><span class="ss">canvas</span><span class="p">:</span><span class="w"> </span><span class="n">canvas</span><span class="p">,</span><span class="w">
+       </span><span class="ss">shader_program</span><span class="p">:</span><span class="w"> </span><span class="n">shader_program</span><span class="p">,</span><span class="w">
+       </span><span class="ss">fps</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+       </span><span class="ss">vao1</span><span class="p">:</span><span class="w"> </span><span class="n">vao1</span><span class="p">,</span><span class="w">
+       </span><span class="ss">vao2</span><span class="p">:</span><span class="w"> </span><span class="n">vao2</span><span class="p">,</span><span class="w">
+       </span><span class="ss">rect_vao</span><span class="p">:</span><span class="w"> </span><span class="n">rect_vao</span><span class="w">
+     </span><span class="p" data-group-id="8437164353-35">}</span><span class="p" data-group-id="8437164353-34">}</span><span class="w">
+  </span><span class="k" data-group-id="8437164353-10">end</span><span class="w">
 
-  @vertex_source &quot;&quot;&quot;
+  </span><span class="na">@vertex_source</span><span class="w"> </span><span class="s">&quot;&quot;&quot;
                  #version 330 core
                  layout (location = 0) in vec3 aPos;
                  void main() {
                  gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
-                 }\0
-                 &quot;&quot;&quot;
-                 |&gt; String.to_charlist()
+                 }</span><span class="se">\0</span><span class="s">
+                 &quot;&quot;&quot;</span><span class="w">
+                 </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">String</span><span class="o">.</span><span class="n">to_charlist</span><span class="p" data-group-id="8437164353-36">(</span><span class="p" data-group-id="8437164353-36">)</span><span class="w">
 
-  @fragment_source &quot;&quot;&quot;
+  </span><span class="na">@fragment_source</span><span class="w"> </span><span class="s">&quot;&quot;&quot;
                    #version 330 core
                    out vec4 FragColor;
                    void main() {
                    FragColor = vec4(0.44f, 0.35f, 0.5f, 1.0f);
-                   }\0
-                   &quot;&quot;&quot;
-                   |&gt; String.to_charlist()
+                   }</span><span class="se">\0</span><span class="s">
+                   &quot;&quot;&quot;</span><span class="w">
+                   </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">String</span><span class="o">.</span><span class="n">to_charlist</span><span class="p" data-group-id="8437164353-37">(</span><span class="p" data-group-id="8437164353-37">)</span><span class="w">
 
-  def init_opengl() do
-    vertex_shader = :gl.createShader(:gl_const.gl_vertex_shader())
-    :gl.shaderSource(vertex_shader, [@vertex_source])
-    :gl.compileShader(vertex_shader)
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">init_opengl</span><span class="p" data-group-id="8437164353-38">(</span><span class="p" data-group-id="8437164353-38">)</span><span class="w"> </span><span class="k" data-group-id="8437164353-39">do</span><span class="w">
+    </span><span class="n">vertex_shader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">:gl</span><span class="o">.</span><span class="n">createShader</span><span class="p" data-group-id="8437164353-40">(</span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_vertex_shader</span><span class="p" data-group-id="8437164353-41">(</span><span class="p" data-group-id="8437164353-41">)</span><span class="p" data-group-id="8437164353-40">)</span><span class="w">
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">shaderSource</span><span class="p" data-group-id="8437164353-42">(</span><span class="n">vertex_shader</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8437164353-43">[</span><span class="na">@vertex_source</span><span class="p" data-group-id="8437164353-43">]</span><span class="p" data-group-id="8437164353-42">)</span><span class="w">
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">compileShader</span><span class="p" data-group-id="8437164353-44">(</span><span class="n">vertex_shader</span><span class="p" data-group-id="8437164353-44">)</span><span class="w">
 
-    fragment_shader = :gl.createShader(:gl_const.gl_fragment_shader())
-    :gl.shaderSource(fragment_shader, [@fragment_source])
-    :gl.compileShader(fragment_shader)
+    </span><span class="n">fragment_shader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">:gl</span><span class="o">.</span><span class="n">createShader</span><span class="p" data-group-id="8437164353-45">(</span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_fragment_shader</span><span class="p" data-group-id="8437164353-46">(</span><span class="p" data-group-id="8437164353-46">)</span><span class="p" data-group-id="8437164353-45">)</span><span class="w">
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">shaderSource</span><span class="p" data-group-id="8437164353-47">(</span><span class="n">fragment_shader</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8437164353-48">[</span><span class="na">@fragment_source</span><span class="p" data-group-id="8437164353-48">]</span><span class="p" data-group-id="8437164353-47">)</span><span class="w">
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">compileShader</span><span class="p" data-group-id="8437164353-49">(</span><span class="n">fragment_shader</span><span class="p" data-group-id="8437164353-49">)</span><span class="w">
 
-    shader_program = :gl.createProgram()
-    :gl.attachShader(shader_program, vertex_shader)
-    :gl.attachShader(shader_program, fragment_shader)
-    :gl.linkProgram(shader_program)
+    </span><span class="n">shader_program</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">:gl</span><span class="o">.</span><span class="n">createProgram</span><span class="p" data-group-id="8437164353-50">(</span><span class="p" data-group-id="8437164353-50">)</span><span class="w">
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">attachShader</span><span class="p" data-group-id="8437164353-51">(</span><span class="n">shader_program</span><span class="p">,</span><span class="w"> </span><span class="n">vertex_shader</span><span class="p" data-group-id="8437164353-51">)</span><span class="w">
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">attachShader</span><span class="p" data-group-id="8437164353-52">(</span><span class="n">shader_program</span><span class="p">,</span><span class="w"> </span><span class="n">fragment_shader</span><span class="p" data-group-id="8437164353-52">)</span><span class="w">
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">linkProgram</span><span class="p" data-group-id="8437164353-53">(</span><span class="n">shader_program</span><span class="p" data-group-id="8437164353-53">)</span><span class="w">
 
-    :gl.deleteShader(vertex_shader)
-    :gl.deleteShader(fragment_shader)
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">deleteShader</span><span class="p" data-group-id="8437164353-54">(</span><span class="n">vertex_shader</span><span class="p" data-group-id="8437164353-54">)</span><span class="w">
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">deleteShader</span><span class="p" data-group-id="8437164353-55">(</span><span class="n">fragment_shader</span><span class="p" data-group-id="8437164353-55">)</span><span class="w">
 
-    vertices = triangle_vertices()
-    vertices_2 = triangle_vertices_2()
+    </span><span class="n">vertices</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">triangle_vertices</span><span class="p" data-group-id="8437164353-56">(</span><span class="p" data-group-id="8437164353-56">)</span><span class="w">
+    </span><span class="n">vertices_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">triangle_vertices_2</span><span class="p" data-group-id="8437164353-57">(</span><span class="p" data-group-id="8437164353-57">)</span><span class="w">
 
-    [vao1, vao2, rect_vao] = :gl.genVertexArrays(3)
-    [vbo1, vbo2, rect_vbo, ebo] = :gl.genBuffers(4)
+    </span><span class="p" data-group-id="8437164353-58">[</span><span class="n">vao1</span><span class="p">,</span><span class="w"> </span><span class="n">vao2</span><span class="p">,</span><span class="w"> </span><span class="n">rect_vao</span><span class="p" data-group-id="8437164353-58">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">:gl</span><span class="o">.</span><span class="n">genVertexArrays</span><span class="p" data-group-id="8437164353-59">(</span><span class="mi">3</span><span class="p" data-group-id="8437164353-59">)</span><span class="w">
+    </span><span class="p" data-group-id="8437164353-60">[</span><span class="n">vbo1</span><span class="p">,</span><span class="w"> </span><span class="n">vbo2</span><span class="p">,</span><span class="w"> </span><span class="n">rect_vbo</span><span class="p">,</span><span class="w"> </span><span class="n">ebo</span><span class="p" data-group-id="8437164353-60">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">:gl</span><span class="o">.</span><span class="n">genBuffers</span><span class="p" data-group-id="8437164353-61">(</span><span class="mi">4</span><span class="p" data-group-id="8437164353-61">)</span><span class="w">
 
-    for {vertex_array, vertex_buffer, vertices} &lt;- [
-          {vao1, vbo1, vertices},
-          {vao2, vbo2, vertices_2}
-        ] do
-      :gl.bindVertexArray(vertex_array)
+    </span><span class="k">for</span><span class="w"> </span><span class="p" data-group-id="8437164353-62">{</span><span class="n">vertex_array</span><span class="p">,</span><span class="w"> </span><span class="n">vertex_buffer</span><span class="p">,</span><span class="w"> </span><span class="n">vertices</span><span class="p" data-group-id="8437164353-62">}</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="p" data-group-id="8437164353-63">[</span><span class="w">
+          </span><span class="p" data-group-id="8437164353-64">{</span><span class="n">vao1</span><span class="p">,</span><span class="w"> </span><span class="n">vbo1</span><span class="p">,</span><span class="w"> </span><span class="n">vertices</span><span class="p" data-group-id="8437164353-64">}</span><span class="p">,</span><span class="w">
+          </span><span class="p" data-group-id="8437164353-65">{</span><span class="n">vao2</span><span class="p">,</span><span class="w"> </span><span class="n">vbo2</span><span class="p">,</span><span class="w"> </span><span class="n">vertices_2</span><span class="p" data-group-id="8437164353-65">}</span><span class="w">
+        </span><span class="p" data-group-id="8437164353-63">]</span><span class="w"> </span><span class="k" data-group-id="8437164353-66">do</span><span class="w">
+      </span><span class="nc">:gl</span><span class="o">.</span><span class="n">bindVertexArray</span><span class="p" data-group-id="8437164353-67">(</span><span class="n">vertex_array</span><span class="p" data-group-id="8437164353-67">)</span><span class="w">
 
-      :gl.bindBuffer(:gl_const.gl_array_buffer(), vertex_buffer)
+      </span><span class="nc">:gl</span><span class="o">.</span><span class="n">bindBuffer</span><span class="p" data-group-id="8437164353-68">(</span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_array_buffer</span><span class="p" data-group-id="8437164353-69">(</span><span class="p" data-group-id="8437164353-69">)</span><span class="p">,</span><span class="w"> </span><span class="n">vertex_buffer</span><span class="p" data-group-id="8437164353-68">)</span><span class="w">
 
-      :gl.bufferData(
-        :gl_const.gl_array_buffer(),
-        byte_size(vertices),
-        vertices,
-        :gl_const.gl_static_draw()
-      )
+      </span><span class="nc">:gl</span><span class="o">.</span><span class="n">bufferData</span><span class="p" data-group-id="8437164353-70">(</span><span class="w">
+        </span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_array_buffer</span><span class="p" data-group-id="8437164353-71">(</span><span class="p" data-group-id="8437164353-71">)</span><span class="p">,</span><span class="w">
+        </span><span class="n">byte_size</span><span class="p" data-group-id="8437164353-72">(</span><span class="n">vertices</span><span class="p" data-group-id="8437164353-72">)</span><span class="p">,</span><span class="w">
+        </span><span class="n">vertices</span><span class="p">,</span><span class="w">
+        </span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_static_draw</span><span class="p" data-group-id="8437164353-73">(</span><span class="p" data-group-id="8437164353-73">)</span><span class="w">
+      </span><span class="p" data-group-id="8437164353-70">)</span><span class="w">
 
-      :gl.vertexAttribPointer(
-        0,
-        3,
-        :gl_const.gl_float(),
-        :gl_const.gl_false(),
-        3 * byte_size(&lt;&lt;0.0::float-size(32)&gt;&gt;),
-        0
-      )
+      </span><span class="nc">:gl</span><span class="o">.</span><span class="n">vertexAttribPointer</span><span class="p" data-group-id="8437164353-74">(</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">3</span><span class="p">,</span><span class="w">
+        </span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_float</span><span class="p" data-group-id="8437164353-75">(</span><span class="p" data-group-id="8437164353-75">)</span><span class="p">,</span><span class="w">
+        </span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_false</span><span class="p" data-group-id="8437164353-76">(</span><span class="p" data-group-id="8437164353-76">)</span><span class="p">,</span><span class="w">
+        </span><span class="mi">3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">byte_size</span><span class="p" data-group-id="8437164353-77">(</span><span class="p" data-group-id="8437164353-78">&lt;&lt;</span><span class="mf">0.0</span><span class="o">::</span><span class="n">float</span><span class="o">-</span><span class="n">size</span><span class="p" data-group-id="8437164353-79">(</span><span class="mi">32</span><span class="p" data-group-id="8437164353-79">)</span><span class="p" data-group-id="8437164353-78">&gt;&gt;</span><span class="p" data-group-id="8437164353-77">)</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="w">
+      </span><span class="p" data-group-id="8437164353-74">)</span><span class="w">
 
-      :gl.enableVertexAttribArray(0)
+      </span><span class="nc">:gl</span><span class="o">.</span><span class="n">enableVertexAttribArray</span><span class="p" data-group-id="8437164353-80">(</span><span class="mi">0</span><span class="p" data-group-id="8437164353-80">)</span><span class="w">
 
-      :gl.bindBuffer(:gl_const.gl_array_buffer(), 0)
+      </span><span class="nc">:gl</span><span class="o">.</span><span class="n">bindBuffer</span><span class="p" data-group-id="8437164353-81">(</span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_array_buffer</span><span class="p" data-group-id="8437164353-82">(</span><span class="p" data-group-id="8437164353-82">)</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p" data-group-id="8437164353-81">)</span><span class="w">
 
-      :gl.bindVertexArray(0)
-    end
+      </span><span class="nc">:gl</span><span class="o">.</span><span class="n">bindVertexArray</span><span class="p" data-group-id="8437164353-83">(</span><span class="mi">0</span><span class="p" data-group-id="8437164353-83">)</span><span class="w">
+    </span><span class="k" data-group-id="8437164353-66">end</span><span class="w">
 
-    rect_vertices = rectangle_vertices()
-    rect_indices = rectangle_indices()
+    </span><span class="n">rect_vertices</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rectangle_vertices</span><span class="p" data-group-id="8437164353-84">(</span><span class="p" data-group-id="8437164353-84">)</span><span class="w">
+    </span><span class="n">rect_indices</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rectangle_indices</span><span class="p" data-group-id="8437164353-85">(</span><span class="p" data-group-id="8437164353-85">)</span><span class="w">
 
-    :gl.bindVertexArray(rect_vao)
-    :gl.bindBuffer(:gl_const.gl_array_buffer(), rect_vbo)
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">bindVertexArray</span><span class="p" data-group-id="8437164353-86">(</span><span class="n">rect_vao</span><span class="p" data-group-id="8437164353-86">)</span><span class="w">
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">bindBuffer</span><span class="p" data-group-id="8437164353-87">(</span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_array_buffer</span><span class="p" data-group-id="8437164353-88">(</span><span class="p" data-group-id="8437164353-88">)</span><span class="p">,</span><span class="w"> </span><span class="n">rect_vbo</span><span class="p" data-group-id="8437164353-87">)</span><span class="w">
 
-    :gl.bufferData(
-      :gl_const.gl_array_buffer(),
-      byte_size(rect_vertices),
-      rect_vertices,
-      :gl_const.gl_static_draw()
-    )
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">bufferData</span><span class="p" data-group-id="8437164353-89">(</span><span class="w">
+      </span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_array_buffer</span><span class="p" data-group-id="8437164353-90">(</span><span class="p" data-group-id="8437164353-90">)</span><span class="p">,</span><span class="w">
+      </span><span class="n">byte_size</span><span class="p" data-group-id="8437164353-91">(</span><span class="n">rect_vertices</span><span class="p" data-group-id="8437164353-91">)</span><span class="p">,</span><span class="w">
+      </span><span class="n">rect_vertices</span><span class="p">,</span><span class="w">
+      </span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_static_draw</span><span class="p" data-group-id="8437164353-92">(</span><span class="p" data-group-id="8437164353-92">)</span><span class="w">
+    </span><span class="p" data-group-id="8437164353-89">)</span><span class="w">
 
-    :gl.bindBuffer(:gl_const.gl_element_array_buffer(), ebo)
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">bindBuffer</span><span class="p" data-group-id="8437164353-93">(</span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_element_array_buffer</span><span class="p" data-group-id="8437164353-94">(</span><span class="p" data-group-id="8437164353-94">)</span><span class="p">,</span><span class="w"> </span><span class="n">ebo</span><span class="p" data-group-id="8437164353-93">)</span><span class="w">
 
-    :gl.bufferData(
-      :gl_const.gl_element_array_buffer(),
-      byte_size(rect_indices),
-      rect_indices,
-      :gl_const.gl_static_draw()
-    )
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">bufferData</span><span class="p" data-group-id="8437164353-95">(</span><span class="w">
+      </span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_element_array_buffer</span><span class="p" data-group-id="8437164353-96">(</span><span class="p" data-group-id="8437164353-96">)</span><span class="p">,</span><span class="w">
+      </span><span class="n">byte_size</span><span class="p" data-group-id="8437164353-97">(</span><span class="n">rect_indices</span><span class="p" data-group-id="8437164353-97">)</span><span class="p">,</span><span class="w">
+      </span><span class="n">rect_indices</span><span class="p">,</span><span class="w">
+      </span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_static_draw</span><span class="p" data-group-id="8437164353-98">(</span><span class="p" data-group-id="8437164353-98">)</span><span class="w">
+    </span><span class="p" data-group-id="8437164353-95">)</span><span class="w">
 
-    :gl.vertexAttribPointer(
-      0,
-      3,
-      :gl_const.gl_float(),
-      :gl_const.gl_false(),
-      3 * byte_size(&lt;&lt;0.0::float-size(32)&gt;&gt;),
-      0
-    )
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">vertexAttribPointer</span><span class="p" data-group-id="8437164353-99">(</span><span class="w">
+      </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="mi">3</span><span class="p">,</span><span class="w">
+      </span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_float</span><span class="p" data-group-id="8437164353-100">(</span><span class="p" data-group-id="8437164353-100">)</span><span class="p">,</span><span class="w">
+      </span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_false</span><span class="p" data-group-id="8437164353-101">(</span><span class="p" data-group-id="8437164353-101">)</span><span class="p">,</span><span class="w">
+      </span><span class="mi">3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">byte_size</span><span class="p" data-group-id="8437164353-102">(</span><span class="p" data-group-id="8437164353-103">&lt;&lt;</span><span class="mf">0.0</span><span class="o">::</span><span class="n">float</span><span class="o">-</span><span class="n">size</span><span class="p" data-group-id="8437164353-104">(</span><span class="mi">32</span><span class="p" data-group-id="8437164353-104">)</span><span class="p" data-group-id="8437164353-103">&gt;&gt;</span><span class="p" data-group-id="8437164353-102">)</span><span class="p">,</span><span class="w">
+      </span><span class="mi">0</span><span class="w">
+    </span><span class="p" data-group-id="8437164353-99">)</span><span class="w">
 
-    :gl.enableVertexAttribArray(0)
-    {shader_program, vao1, vao2, rect_vao}
-  end
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">enableVertexAttribArray</span><span class="p" data-group-id="8437164353-105">(</span><span class="mi">0</span><span class="p" data-group-id="8437164353-105">)</span><span class="w">
+    </span><span class="p" data-group-id="8437164353-106">{</span><span class="n">shader_program</span><span class="p">,</span><span class="w"> </span><span class="n">vao1</span><span class="p">,</span><span class="w"> </span><span class="n">vao2</span><span class="p">,</span><span class="w"> </span><span class="n">rect_vao</span><span class="p" data-group-id="8437164353-106">}</span><span class="w">
+  </span><span class="k" data-group-id="8437164353-39">end</span><span class="w">
 
-  @triangle_vertices [
-                       [0.0, 1.0, 0.0],
-                       [1.0, 0.0, 0.0],
-                       [1.0, 1.0, 0.0]
-                     ]
-                     |&gt; List.flatten()
-                     |&gt; Enum.reduce(&lt;&lt;&gt;&gt;, fn el, acc -&gt; acc &lt;&gt; &lt;&lt;el::float-native-size(32)&gt;&gt; end)
-  def triangle_vertices do
-    @triangle_vertices
-  end
+  </span><span class="na">@triangle_vertices</span><span class="w"> </span><span class="p" data-group-id="8437164353-107">[</span><span class="w">
+                       </span><span class="p" data-group-id="8437164353-108">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p" data-group-id="8437164353-108">]</span><span class="p">,</span><span class="w">
+                       </span><span class="p" data-group-id="8437164353-109">[</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p" data-group-id="8437164353-109">]</span><span class="p">,</span><span class="w">
+                       </span><span class="p" data-group-id="8437164353-110">[</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p" data-group-id="8437164353-110">]</span><span class="w">
+                     </span><span class="p" data-group-id="8437164353-107">]</span><span class="w">
+                     </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">List</span><span class="o">.</span><span class="n">flatten</span><span class="p" data-group-id="8437164353-111">(</span><span class="p" data-group-id="8437164353-111">)</span><span class="w">
+                     </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Enum</span><span class="o">.</span><span class="n">reduce</span><span class="p" data-group-id="8437164353-112">(</span><span class="p" data-group-id="8437164353-113">&lt;&lt;</span><span class="p" data-group-id="8437164353-113">&gt;&gt;</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="8437164353-114">fn</span><span class="w"> </span><span class="n">el</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="p" data-group-id="8437164353-115">&lt;&lt;</span><span class="n">el</span><span class="o">::</span><span class="n">float</span><span class="o">-</span><span class="n">native</span><span class="o">-</span><span class="n">size</span><span class="p" data-group-id="8437164353-116">(</span><span class="mi">32</span><span class="p" data-group-id="8437164353-116">)</span><span class="p" data-group-id="8437164353-115">&gt;&gt;</span><span class="w"> </span><span class="k" data-group-id="8437164353-114">end</span><span class="p" data-group-id="8437164353-112">)</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">triangle_vertices</span><span class="w"> </span><span class="k" data-group-id="8437164353-117">do</span><span class="w">
+    </span><span class="na">@triangle_vertices</span><span class="w">
+  </span><span class="k" data-group-id="8437164353-117">end</span><span class="w">
 
-  @triangle_vertices_2 [
-                         [-0.5, -0.5, 0.0],
-                         [0.5, -0.5, 0.0],
-                         [0.0, 0.5, 0.0]
-                       ]
-                       |&gt; List.flatten()
-                       |&gt; Enum.reduce(&lt;&lt;&gt;&gt;, fn el, acc -&gt; acc &lt;&gt; &lt;&lt;el::float-native-size(32)&gt;&gt; end)
-  def triangle_vertices_2 do
-    @triangle_vertices_2
-  end
+  </span><span class="na">@triangle_vertices_2</span><span class="w"> </span><span class="p" data-group-id="8437164353-118">[</span><span class="w">
+                         </span><span class="p" data-group-id="8437164353-119">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p" data-group-id="8437164353-119">]</span><span class="p">,</span><span class="w">
+                         </span><span class="p" data-group-id="8437164353-120">[</span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p" data-group-id="8437164353-120">]</span><span class="p">,</span><span class="w">
+                         </span><span class="p" data-group-id="8437164353-121">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p" data-group-id="8437164353-121">]</span><span class="w">
+                       </span><span class="p" data-group-id="8437164353-118">]</span><span class="w">
+                       </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">List</span><span class="o">.</span><span class="n">flatten</span><span class="p" data-group-id="8437164353-122">(</span><span class="p" data-group-id="8437164353-122">)</span><span class="w">
+                       </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Enum</span><span class="o">.</span><span class="n">reduce</span><span class="p" data-group-id="8437164353-123">(</span><span class="p" data-group-id="8437164353-124">&lt;&lt;</span><span class="p" data-group-id="8437164353-124">&gt;&gt;</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="8437164353-125">fn</span><span class="w"> </span><span class="n">el</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="p" data-group-id="8437164353-126">&lt;&lt;</span><span class="n">el</span><span class="o">::</span><span class="n">float</span><span class="o">-</span><span class="n">native</span><span class="o">-</span><span class="n">size</span><span class="p" data-group-id="8437164353-127">(</span><span class="mi">32</span><span class="p" data-group-id="8437164353-127">)</span><span class="p" data-group-id="8437164353-126">&gt;&gt;</span><span class="w"> </span><span class="k" data-group-id="8437164353-125">end</span><span class="p" data-group-id="8437164353-123">)</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">triangle_vertices_2</span><span class="w"> </span><span class="k" data-group-id="8437164353-128">do</span><span class="w">
+    </span><span class="na">@triangle_vertices_2</span><span class="w">
+  </span><span class="k" data-group-id="8437164353-128">end</span><span class="w">
 
-  @rectangle_vertices [
-                        [0.5, 0.5, 0.0],
-                        [0.5, -0.5, 0.0],
-                        [-0.5, -0.5, 0.0],
-                        [-0.5, 0.5, 0.0]
-                      ]
-                      |&gt; List.flatten()
-                      |&gt; Enum.reduce(&lt;&lt;&gt;&gt;, fn el, acc -&gt; acc &lt;&gt; &lt;&lt;el::float-native-size(32)&gt;&gt; end)
+  </span><span class="na">@rectangle_vertices</span><span class="w"> </span><span class="p" data-group-id="8437164353-129">[</span><span class="w">
+                        </span><span class="p" data-group-id="8437164353-130">[</span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p" data-group-id="8437164353-130">]</span><span class="p">,</span><span class="w">
+                        </span><span class="p" data-group-id="8437164353-131">[</span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p" data-group-id="8437164353-131">]</span><span class="p">,</span><span class="w">
+                        </span><span class="p" data-group-id="8437164353-132">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p" data-group-id="8437164353-132">]</span><span class="p">,</span><span class="w">
+                        </span><span class="p" data-group-id="8437164353-133">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p" data-group-id="8437164353-133">]</span><span class="w">
+                      </span><span class="p" data-group-id="8437164353-129">]</span><span class="w">
+                      </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">List</span><span class="o">.</span><span class="n">flatten</span><span class="p" data-group-id="8437164353-134">(</span><span class="p" data-group-id="8437164353-134">)</span><span class="w">
+                      </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Enum</span><span class="o">.</span><span class="n">reduce</span><span class="p" data-group-id="8437164353-135">(</span><span class="p" data-group-id="8437164353-136">&lt;&lt;</span><span class="p" data-group-id="8437164353-136">&gt;&gt;</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="8437164353-137">fn</span><span class="w"> </span><span class="n">el</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="p" data-group-id="8437164353-138">&lt;&lt;</span><span class="n">el</span><span class="o">::</span><span class="n">float</span><span class="o">-</span><span class="n">native</span><span class="o">-</span><span class="n">size</span><span class="p" data-group-id="8437164353-139">(</span><span class="mi">32</span><span class="p" data-group-id="8437164353-139">)</span><span class="p" data-group-id="8437164353-138">&gt;&gt;</span><span class="w"> </span><span class="k" data-group-id="8437164353-137">end</span><span class="p" data-group-id="8437164353-135">)</span><span class="w">
 
-  def rectangle_vertices do
-    @rectangle_vertices
-  end
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">rectangle_vertices</span><span class="w"> </span><span class="k" data-group-id="8437164353-140">do</span><span class="w">
+    </span><span class="na">@rectangle_vertices</span><span class="w">
+  </span><span class="k" data-group-id="8437164353-140">end</span><span class="w">
 
-  @rectangle_indices [[0, 1, 3], [1, 2, 3]]
-                     |&gt; List.flatten()
-                     |&gt; Enum.reduce(&lt;&lt;&gt;&gt;, fn el, acc -&gt; acc &lt;&gt; &lt;&lt;el::native-size(32)&gt;&gt; end)
-  def rectangle_indices do
-    @rectangle_indices
-  end
+  </span><span class="na">@rectangle_indices</span><span class="w"> </span><span class="p" data-group-id="8437164353-141">[</span><span class="p" data-group-id="8437164353-142">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="8437164353-142">]</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8437164353-143">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="8437164353-143">]</span><span class="p" data-group-id="8437164353-141">]</span><span class="w">
+                     </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">List</span><span class="o">.</span><span class="n">flatten</span><span class="p" data-group-id="8437164353-144">(</span><span class="p" data-group-id="8437164353-144">)</span><span class="w">
+                     </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Enum</span><span class="o">.</span><span class="n">reduce</span><span class="p" data-group-id="8437164353-145">(</span><span class="p" data-group-id="8437164353-146">&lt;&lt;</span><span class="p" data-group-id="8437164353-146">&gt;&gt;</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="8437164353-147">fn</span><span class="w"> </span><span class="n">el</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="p" data-group-id="8437164353-148">&lt;&lt;</span><span class="n">el</span><span class="o">::</span><span class="n">native</span><span class="o">-</span><span class="n">size</span><span class="p" data-group-id="8437164353-149">(</span><span class="mi">32</span><span class="p" data-group-id="8437164353-149">)</span><span class="p" data-group-id="8437164353-148">&gt;&gt;</span><span class="w"> </span><span class="k" data-group-id="8437164353-147">end</span><span class="p" data-group-id="8437164353-145">)</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">rectangle_indices</span><span class="w"> </span><span class="k" data-group-id="8437164353-150">do</span><span class="w">
+    </span><span class="na">@rectangle_indices</span><span class="w">
+  </span><span class="k" data-group-id="8437164353-150">end</span><span class="w">
 
-  @impl :wx_object
-  def handle_event(wx(event: wxClose()), state) do
-    {:stop, :normal, state}
-  end
+  </span><span class="na">@impl</span><span class="w"> </span><span class="ss">:wx_object</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">handle_event</span><span class="p" data-group-id="8437164353-151">(</span><span class="n">wx</span><span class="p" data-group-id="8437164353-152">(</span><span class="ss">event</span><span class="p">:</span><span class="w"> </span><span class="n">wxClose</span><span class="p" data-group-id="8437164353-153">(</span><span class="p" data-group-id="8437164353-153">)</span><span class="p" data-group-id="8437164353-152">)</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="8437164353-151">)</span><span class="w"> </span><span class="k" data-group-id="8437164353-154">do</span><span class="w">
+    </span><span class="p" data-group-id="8437164353-155">{</span><span class="ss">:stop</span><span class="p">,</span><span class="w"> </span><span class="ss">:normal</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="8437164353-155">}</span><span class="w">
+  </span><span class="k" data-group-id="8437164353-154">end</span><span class="w">
 
-  @impl :wx_object
-  def handle_info(:stop, %{canvas: canvas, fps_counter_label: fps_counter_label} = state) do
-    :wxGLCanvas.destroy(canvas)
-    :wxStaticText.destroy(fps_counter_label)
+  </span><span class="na">@impl</span><span class="w"> </span><span class="ss">:wx_object</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">handle_info</span><span class="p" data-group-id="8437164353-156">(</span><span class="ss">:stop</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8437164353-157">%{</span><span class="ss">canvas</span><span class="p">:</span><span class="w"> </span><span class="n">canvas</span><span class="p">,</span><span class="w"> </span><span class="ss">fps_counter_label</span><span class="p">:</span><span class="w"> </span><span class="n">fps_counter_label</span><span class="p" data-group-id="8437164353-157">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="8437164353-156">)</span><span class="w"> </span><span class="k" data-group-id="8437164353-158">do</span><span class="w">
+    </span><span class="nc">:wxGLCanvas</span><span class="o">.</span><span class="n">destroy</span><span class="p" data-group-id="8437164353-159">(</span><span class="n">canvas</span><span class="p" data-group-id="8437164353-159">)</span><span class="w">
+    </span><span class="nc">:wxStaticText</span><span class="o">.</span><span class="n">destroy</span><span class="p" data-group-id="8437164353-160">(</span><span class="n">fps_counter_label</span><span class="p" data-group-id="8437164353-160">)</span><span class="w">
 
-    {:stop, :normal, state}
-  end
+    </span><span class="p" data-group-id="8437164353-161">{</span><span class="ss">:stop</span><span class="p">,</span><span class="w"> </span><span class="ss">:normal</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="8437164353-161">}</span><span class="w">
+  </span><span class="k" data-group-id="8437164353-158">end</span><span class="w">
 
-  @impl :wx_object
-  def handle_info(:update, state) do
-    state = render(state)
+  </span><span class="na">@impl</span><span class="w"> </span><span class="ss">:wx_object</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">handle_info</span><span class="p" data-group-id="8437164353-162">(</span><span class="ss">:update</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="8437164353-162">)</span><span class="w"> </span><span class="k" data-group-id="8437164353-163">do</span><span class="w">
+    </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">render</span><span class="p" data-group-id="8437164353-164">(</span><span class="n">state</span><span class="p" data-group-id="8437164353-164">)</span><span class="w">
 
-    {:noreply, state}
-  end
+    </span><span class="p" data-group-id="8437164353-165">{</span><span class="ss">:noreply</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="8437164353-165">}</span><span class="w">
+  </span><span class="k" data-group-id="8437164353-163">end</span><span class="w">
 
-  defp render(%{canvas: canvas} = state) do
-    state =
-      state
-      |&gt; update_frame_counter()
-      |&gt; draw()
+  </span><span class="kd">defp</span><span class="w"> </span><span class="nf">render</span><span class="p" data-group-id="8437164353-166">(</span><span class="p" data-group-id="8437164353-167">%{</span><span class="ss">canvas</span><span class="p">:</span><span class="w"> </span><span class="n">canvas</span><span class="p" data-group-id="8437164353-167">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="8437164353-166">)</span><span class="w"> </span><span class="k" data-group-id="8437164353-168">do</span><span class="w">
+    </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w">
+      </span><span class="n">state</span><span class="w">
+      </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">update_frame_counter</span><span class="p" data-group-id="8437164353-169">(</span><span class="p" data-group-id="8437164353-169">)</span><span class="w">
+      </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">draw</span><span class="p" data-group-id="8437164353-170">(</span><span class="p" data-group-id="8437164353-170">)</span><span class="w">
 
-    :wxGLCanvas.swapBuffers(canvas)
-    send(self(), :update)
+    </span><span class="nc">:wxGLCanvas</span><span class="o">.</span><span class="n">swapBuffers</span><span class="p" data-group-id="8437164353-171">(</span><span class="n">canvas</span><span class="p" data-group-id="8437164353-171">)</span><span class="w">
+    </span><span class="n">send</span><span class="p" data-group-id="8437164353-172">(</span><span class="n">self</span><span class="p" data-group-id="8437164353-173">(</span><span class="p" data-group-id="8437164353-173">)</span><span class="p">,</span><span class="w"> </span><span class="ss">:update</span><span class="p" data-group-id="8437164353-172">)</span><span class="w">
 
-    state
-  end
+    </span><span class="n">state</span><span class="w">
+  </span><span class="k" data-group-id="8437164353-168">end</span><span class="w">
 
-  defp draw(%{frame: frame} = state) do
-    :gl.clearColor(0.2, 0.1, 0.3, 1.0)
-    :gl.clear(:gl_const.gl_color_buffer_bit())
+  </span><span class="kd">defp</span><span class="w"> </span><span class="nf">draw</span><span class="p" data-group-id="8437164353-174">(</span><span class="p" data-group-id="8437164353-175">%{</span><span class="ss">frame</span><span class="p">:</span><span class="w"> </span><span class="n">frame</span><span class="p" data-group-id="8437164353-175">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="8437164353-174">)</span><span class="w"> </span><span class="k" data-group-id="8437164353-176">do</span><span class="w">
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">clearColor</span><span class="p" data-group-id="8437164353-177">(</span><span class="mf">0.2</span><span class="p">,</span><span class="w"> </span><span class="mf">0.1</span><span class="p">,</span><span class="w"> </span><span class="mf">0.3</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p" data-group-id="8437164353-177">)</span><span class="w">
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">clear</span><span class="p" data-group-id="8437164353-178">(</span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_color_buffer_bit</span><span class="p" data-group-id="8437164353-179">(</span><span class="p" data-group-id="8437164353-179">)</span><span class="p" data-group-id="8437164353-178">)</span><span class="w">
 
-    :gl.useProgram(state.shader_program)
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">useProgram</span><span class="p" data-group-id="8437164353-180">(</span><span class="n">state</span><span class="o">.</span><span class="n">shader_program</span><span class="p" data-group-id="8437164353-180">)</span><span class="w">
 
-    :gl.bindVertexArray(state.vao1)
-    :gl.drawArrays(:gl_const.gl_triangles(), 0, 3)
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">bindVertexArray</span><span class="p" data-group-id="8437164353-181">(</span><span class="n">state</span><span class="o">.</span><span class="n">vao1</span><span class="p" data-group-id="8437164353-181">)</span><span class="w">
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">drawArrays</span><span class="p" data-group-id="8437164353-182">(</span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_triangles</span><span class="p" data-group-id="8437164353-183">(</span><span class="p" data-group-id="8437164353-183">)</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="8437164353-182">)</span><span class="w">
 
-    :gl.bindVertexArray(state.vao2)
-    :gl.drawArrays(:gl_const.gl_triangles(), 0, 3)
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">bindVertexArray</span><span class="p" data-group-id="8437164353-184">(</span><span class="n">state</span><span class="o">.</span><span class="n">vao2</span><span class="p" data-group-id="8437164353-184">)</span><span class="w">
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">drawArrays</span><span class="p" data-group-id="8437164353-185">(</span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_triangles</span><span class="p" data-group-id="8437164353-186">(</span><span class="p" data-group-id="8437164353-186">)</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="8437164353-185">)</span><span class="w">
 
-    :gl.polygonMode(:gl_const.gl_front_and_back(), :gl_const.gl_line())
-    :gl.bindVertexArray(state.rect_vao)
-    :gl.drawElements(:gl_const.gl_triangles(), 6, :gl_const.gl_unsigned_int(), 0)
-    :gl.polygonMode(:gl_const.gl_front_and_back(), :gl_const.gl_fill())
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">polygonMode</span><span class="p" data-group-id="8437164353-187">(</span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_front_and_back</span><span class="p" data-group-id="8437164353-188">(</span><span class="p" data-group-id="8437164353-188">)</span><span class="p">,</span><span class="w"> </span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_line</span><span class="p" data-group-id="8437164353-189">(</span><span class="p" data-group-id="8437164353-189">)</span><span class="p" data-group-id="8437164353-187">)</span><span class="w">
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">bindVertexArray</span><span class="p" data-group-id="8437164353-190">(</span><span class="n">state</span><span class="o">.</span><span class="n">rect_vao</span><span class="p" data-group-id="8437164353-190">)</span><span class="w">
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">drawElements</span><span class="p" data-group-id="8437164353-191">(</span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_triangles</span><span class="p" data-group-id="8437164353-192">(</span><span class="p" data-group-id="8437164353-192">)</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_unsigned_int</span><span class="p" data-group-id="8437164353-193">(</span><span class="p" data-group-id="8437164353-193">)</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p" data-group-id="8437164353-191">)</span><span class="w">
+    </span><span class="nc">:gl</span><span class="o">.</span><span class="n">polygonMode</span><span class="p" data-group-id="8437164353-194">(</span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_front_and_back</span><span class="p" data-group-id="8437164353-195">(</span><span class="p" data-group-id="8437164353-195">)</span><span class="p">,</span><span class="w"> </span><span class="nc">:gl_const</span><span class="o">.</span><span class="n">gl_fill</span><span class="p" data-group-id="8437164353-196">(</span><span class="p" data-group-id="8437164353-196">)</span><span class="p" data-group-id="8437164353-194">)</span><span class="w">
 
-    :wxWindow.setLabel(frame, ~c&quot;FPS: #{state.fps}&quot;)
+    </span><span class="nc">:wxWindow</span><span class="o">.</span><span class="n">setLabel</span><span class="p" data-group-id="8437164353-197">(</span><span class="n">frame</span><span class="p">,</span><span class="w"> </span><span class="s">~c&quot;FPS: </span><span class="si" data-group-id="8437164353-198">#{</span><span class="n">state</span><span class="o">.</span><span class="n">fps</span><span class="si" data-group-id="8437164353-198">}</span><span class="s">&quot;</span><span class="p" data-group-id="8437164353-197">)</span><span class="w">
 
-    state
-  end
+    </span><span class="n">state</span><span class="w">
+  </span><span class="k" data-group-id="8437164353-176">end</span><span class="w">
 
-  def update_frame_counter(%{last_time: last_time, frame_counter: frame_counter} = state) do
-    now = System.monotonic_time(:millisecond)
-    elapsed = now - last_time
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">update_frame_counter</span><span class="p" data-group-id="8437164353-199">(</span><span class="p" data-group-id="8437164353-200">%{</span><span class="ss">last_time</span><span class="p">:</span><span class="w"> </span><span class="n">last_time</span><span class="p">,</span><span class="w"> </span><span class="ss">frame_counter</span><span class="p">:</span><span class="w"> </span><span class="n">frame_counter</span><span class="p" data-group-id="8437164353-200">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="8437164353-199">)</span><span class="w"> </span><span class="k" data-group-id="8437164353-201">do</span><span class="w">
+    </span><span class="n">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">System</span><span class="o">.</span><span class="n">monotonic_time</span><span class="p" data-group-id="8437164353-202">(</span><span class="ss">:millisecond</span><span class="p" data-group-id="8437164353-202">)</span><span class="w">
+    </span><span class="n">elapsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">last_time</span><span class="w">
 
-    if elapsed &gt; 100 do
-      frames = :counters.get(frame_counter, 1)
-      fps = (frames / elapsed * 1000) |&gt; round()
-      :counters.put(frame_counter, 1, 0)
-      Map.merge(state, %{fps: fps, last_time: now})
-    else
-      :counters.add(frame_counter, 1, 1)
-      state
-    end
-  end
+    </span><span class="k">if</span><span class="w"> </span><span class="n">elapsed</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="k" data-group-id="8437164353-203">do</span><span class="w">
+      </span><span class="n">frames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">:counters</span><span class="o">.</span><span class="n">get</span><span class="p" data-group-id="8437164353-204">(</span><span class="n">frame_counter</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="8437164353-204">)</span><span class="w">
+      </span><span class="n">fps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="8437164353-205">(</span><span class="n">frames</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">elapsed</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1000</span><span class="p" data-group-id="8437164353-205">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">round</span><span class="p" data-group-id="8437164353-206">(</span><span class="p" data-group-id="8437164353-206">)</span><span class="w">
+      </span><span class="nc">:counters</span><span class="o">.</span><span class="n">put</span><span class="p" data-group-id="8437164353-207">(</span><span class="n">frame_counter</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p" data-group-id="8437164353-207">)</span><span class="w">
+      </span><span class="nc">Map</span><span class="o">.</span><span class="n">merge</span><span class="p" data-group-id="8437164353-208">(</span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8437164353-209">%{</span><span class="ss">fps</span><span class="p">:</span><span class="w"> </span><span class="n">fps</span><span class="p">,</span><span class="w"> </span><span class="ss">last_time</span><span class="p">:</span><span class="w"> </span><span class="n">now</span><span class="p" data-group-id="8437164353-209">}</span><span class="p" data-group-id="8437164353-208">)</span><span class="w">
+    </span><span class="k" data-group-id="8437164353-203">else</span><span class="w">
+      </span><span class="nc">:counters</span><span class="o">.</span><span class="n">add</span><span class="p" data-group-id="8437164353-210">(</span><span class="n">frame_counter</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="8437164353-210">)</span><span class="w">
+      </span><span class="n">state</span><span class="w">
+    </span><span class="k" data-group-id="8437164353-203">end</span><span class="w">
+  </span><span class="k" data-group-id="8437164353-201">end</span><span class="w">
 
-  def child_spec(opts) do
-    %{
-      id: __MODULE__,
-      start: {__MODULE__, :start_link, [opts]},
-      restart: :permanent
-    }
-  end
-end</code></pre>
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">child_spec</span><span class="p" data-group-id="8437164353-211">(</span><span class="n">opts</span><span class="p" data-group-id="8437164353-211">)</span><span class="w"> </span><span class="k" data-group-id="8437164353-212">do</span><span class="w">
+    </span><span class="p" data-group-id="8437164353-213">%{</span><span class="w">
+      </span><span class="ss">id</span><span class="p">:</span><span class="w"> </span><span class="bp">__MODULE__</span><span class="p">,</span><span class="w">
+      </span><span class="ss">start</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="8437164353-214">{</span><span class="bp">__MODULE__</span><span class="p">,</span><span class="w"> </span><span class="ss">:start_link</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8437164353-215">[</span><span class="n">opts</span><span class="p" data-group-id="8437164353-215">]</span><span class="p" data-group-id="8437164353-214">}</span><span class="p">,</span><span class="w">
+      </span><span class="ss">restart</span><span class="p">:</span><span class="w"> </span><span class="ss">:permanent</span><span class="w">
+    </span><span class="p" data-group-id="8437164353-213">}</span><span class="w">
+  </span><span class="k" data-group-id="8437164353-212">end</span><span class="w">
+</span><span class="k" data-group-id="8437164353-1">end</span></code></pre>
 <p>
 I was reading some of the related links and I saw this article with a bit about adding a FPS counter, and I thought that would be a fun exercise to try.</p>
 <p>

@@ -3,7 +3,7 @@ defmodule Personal.Blog do
     build: Personal.Post,
     from: "./posts/**/*.md",
     as: :posts,
-    highlighters: [:makeup_syntect]
+    highlighters: [:makeup_syntect, :makeup_elixir, :makeup_erlang]
 
   @posts Enum.sort_by(@posts, & &1.date, {:desc, Date})
 

@@ -16,7 +16,7 @@
       <header class="bg-bludacris p-10 my-4 lg:mt-10 lg:mb-14">
         <h1><a href="https://andyleclair.dev/">andy@andyleclair.dev</a>$><span class="blink">_</span></h1>
       </header>
-      <main class="container mx-auto relative grow min-h-96 flex-1 p-4 items-center">
+      <main class="flex flex-col mx-auto relative grow min-h-96 flex-1 p-4 justify-items-center">
         
   <article class="mx-auto prose sm:prose-sm md:prose-md lg:prose-xl prose-pre:bg-codebg">
     <h1>Dev Server</h1>
@@ -29,106 +29,106 @@ A minor annoyance while developing this site is that I’ve not really had a goo
 What I’ve been doing is just a string of <code class="inline">fish</code> commands to rebuild the whole site and then start a python server in the <code class="inline">/output</code> directory. Let’s do better!</p>
 <p>
 First, we’ll pull in <a href="https://github.com/mtrudel/bandit">Bandit</a> to serve the stuff, and then we’ll pull in <a href="https://github.com/falood/file_system">FileSystem</a> to watch for changes.</p>
-<pre><code class="elixir">{:bandit, &quot;~&gt; 1.0&quot;},
-{:plug_static_index_html, &quot;~&gt; 1.0&quot;},
-{:file_system, &quot;~&gt; 1.0&quot;, only: :dev}</code></pre>
+<pre><code class="makeup elixir"><span class="p" data-group-id="4685996510-1">{</span><span class="ss">:bandit</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;~&gt; 1.0&quot;</span><span class="p" data-group-id="4685996510-1">}</span><span class="p">,</span><span class="w">
+</span><span class="p" data-group-id="4685996510-2">{</span><span class="ss">:plug_static_index_html</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;~&gt; 1.0&quot;</span><span class="p" data-group-id="4685996510-2">}</span><span class="p">,</span><span class="w">
+</span><span class="p" data-group-id="4685996510-3">{</span><span class="ss">:file_system</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;~&gt; 1.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">only</span><span class="p">:</span><span class="w"> </span><span class="ss">:dev</span><span class="p" data-group-id="4685996510-3">}</span></code></pre>
 <p>
 I’m using <code class="inline">plug_static_index_html</code> but it hasn’t been updated in years, and it’s one file, I could just pull it in. It needs to be updated and emits a warning. Maybe the author will take a PR?</p>
 <p>
 I’ve added this <code class="inline">Plug</code> which handles serving the static files and the <code class="inline">index.html</code> file. It would be nice if <code class="inline">Plug.Static</code> could do that automatically. There have been closed PRs that would do it, but apparently it’s not wanted? Fair enough.</p>
-<pre><code class="elixir">defmodule Personal.Router do
-  use Plug.Router
-  plug :match
-  plug :dispatch
+<pre><code class="makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">Personal.Router</span><span class="w"> </span><span class="k" data-group-id="5349073325-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">Plug.Router</span><span class="w">
+  </span><span class="n">plug</span><span class="w"> </span><span class="ss">:match</span><span class="w">
+  </span><span class="n">plug</span><span class="w"> </span><span class="ss">:dispatch</span><span class="w">
 
-  get &quot;/drafts&quot; do
-    send_resp(conn, 200, &quot;drafts&quot;)
-  end
+  </span><span class="n">get</span><span class="w"> </span><span class="s">&quot;/drafts&quot;</span><span class="w"> </span><span class="k" data-group-id="5349073325-2">do</span><span class="w">
+    </span><span class="n">send_resp</span><span class="p" data-group-id="5349073325-3">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;drafts&quot;</span><span class="p" data-group-id="5349073325-3">)</span><span class="w">
+  </span><span class="k" data-group-id="5349073325-2">end</span><span class="w">
 
-  match _ do
-    send_resp(conn, 404, &quot;oops&quot;)
-  end
-end
+  </span><span class="n">match</span><span class="w"> </span><span class="bp">_</span><span class="w"> </span><span class="k" data-group-id="5349073325-4">do</span><span class="w">
+    </span><span class="n">send_resp</span><span class="p" data-group-id="5349073325-5">(</span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="mi">404</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;oops&quot;</span><span class="p" data-group-id="5349073325-5">)</span><span class="w">
+  </span><span class="k" data-group-id="5349073325-4">end</span><span class="w">
+</span><span class="k" data-group-id="5349073325-1">end</span><span class="w">
 
-defmodule Personal.DevServer do
-  use Plug.Builder
+</span><span class="kd">defmodule</span><span class="w"> </span><span class="nc">Personal.DevServer</span><span class="w"> </span><span class="k" data-group-id="5349073325-6">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">Plug.Builder</span><span class="w">
 
-  plug Plug.Static.IndexHtml, at: &quot;/&quot;
+  </span><span class="n">plug</span><span class="w"> </span><span class="nc">Plug.Static.IndexHtml</span><span class="p">,</span><span class="w"> </span><span class="ss">at</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="w">
 
-  plug Plug.Static,
-    at: &quot;/&quot;,
-    from: &quot;./output&quot;
+  </span><span class="n">plug</span><span class="w"> </span><span class="nc">Plug.Static</span><span class="p">,</span><span class="w">
+    </span><span class="ss">at</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">,</span><span class="w">
+    </span><span class="ss">from</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;./output&quot;</span><span class="w">
 
-  plug Personal.Router
-end
-</code></pre>
+  </span><span class="n">plug</span><span class="w"> </span><span class="nc">Personal.Router</span><span class="w">
+</span><span class="k" data-group-id="5349073325-6">end</span><span class="w">
+</span></code></pre>
 <p>
 There’s a stub for serving drafts from the <code class="inline">/drafts</code> folder, but I can live without it for now. Perfect is the enemy of good, after all.</p>
 <p>
 Then we add the Filesystem watcher:</p>
-<pre><code class="elixir">defmodule Personal.Watcher do
-  require Logger
-  use GenServer
+<pre><code class="makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">Personal.Watcher</span><span class="w"> </span><span class="k" data-group-id="0600358582-1">do</span><span class="w">
+  </span><span class="kn">require</span><span class="w"> </span><span class="nc">Logger</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">GenServer</span><span class="w">
 
-  def start_link(args) do
-    GenServer.start_link(__MODULE__, args)
-  end
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">start_link</span><span class="p" data-group-id="0600358582-2">(</span><span class="n">args</span><span class="p" data-group-id="0600358582-2">)</span><span class="w"> </span><span class="k" data-group-id="0600358582-3">do</span><span class="w">
+    </span><span class="nc">GenServer</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="0600358582-4">(</span><span class="bp">__MODULE__</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p" data-group-id="0600358582-4">)</span><span class="w">
+  </span><span class="k" data-group-id="0600358582-3">end</span><span class="w">
 
-  def init(args) do
-    {:ok, watcher_pid} = FileSystem.start_link(args)
-    FileSystem.subscribe(watcher_pid)
-    {:ok, %{watcher_pid: watcher_pid}}
-  end
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">init</span><span class="p" data-group-id="0600358582-5">(</span><span class="n">args</span><span class="p" data-group-id="0600358582-5">)</span><span class="w"> </span><span class="k" data-group-id="0600358582-6">do</span><span class="w">
+    </span><span class="p" data-group-id="0600358582-7">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">watcher_pid</span><span class="p" data-group-id="0600358582-7">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">FileSystem</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="0600358582-8">(</span><span class="n">args</span><span class="p" data-group-id="0600358582-8">)</span><span class="w">
+    </span><span class="nc">FileSystem</span><span class="o">.</span><span class="n">subscribe</span><span class="p" data-group-id="0600358582-9">(</span><span class="n">watcher_pid</span><span class="p" data-group-id="0600358582-9">)</span><span class="w">
+    </span><span class="p" data-group-id="0600358582-10">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="0600358582-11">%{</span><span class="ss">watcher_pid</span><span class="p">:</span><span class="w"> </span><span class="n">watcher_pid</span><span class="p" data-group-id="0600358582-11">}</span><span class="p" data-group-id="0600358582-10">}</span><span class="w">
+  </span><span class="k" data-group-id="0600358582-6">end</span><span class="w">
 
-  # These emit a LOT of events, [:modified] is fine
-  def handle_info(
-        {:file_event, watcher_pid, {path, [:modified]}},
-        %{watcher_pid: watcher_pid} = state
-      ) do
-    Mix.shell().info([&quot;File modified: #{path}&quot;])
-    Mix.shell().info([&quot;Site Rebuilding&quot;])
-    # Currently, we&#39;re just recompiling the entire site
-    # TODO: make this fancier based on the path
-    System.cmd(&quot;mix&quot;, [&quot;site.build&quot;])
-    Mix.shell().info([:green, &quot;Site rebuilt&quot;])
-    {:noreply, state}
-    {:noreply, state}
-  end
+  </span><span class="c1"># These emit a LOT of events, [:modified] is fine</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">handle_info</span><span class="p" data-group-id="0600358582-12">(</span><span class="w">
+        </span><span class="p" data-group-id="0600358582-13">{</span><span class="ss">:file_event</span><span class="p">,</span><span class="w"> </span><span class="n">watcher_pid</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="0600358582-14">{</span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="0600358582-15">[</span><span class="ss">:modified</span><span class="p" data-group-id="0600358582-15">]</span><span class="p" data-group-id="0600358582-14">}</span><span class="p" data-group-id="0600358582-13">}</span><span class="p">,</span><span class="w">
+        </span><span class="p" data-group-id="0600358582-16">%{</span><span class="ss">watcher_pid</span><span class="p">:</span><span class="w"> </span><span class="n">watcher_pid</span><span class="p" data-group-id="0600358582-16">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="w">
+      </span><span class="p" data-group-id="0600358582-12">)</span><span class="w"> </span><span class="k" data-group-id="0600358582-17">do</span><span class="w">
+    </span><span class="nc">Mix</span><span class="o">.</span><span class="n">shell</span><span class="p" data-group-id="0600358582-18">(</span><span class="p" data-group-id="0600358582-18">)</span><span class="o">.</span><span class="n">info</span><span class="p" data-group-id="0600358582-19">(</span><span class="p" data-group-id="0600358582-20">[</span><span class="s">&quot;File modified: </span><span class="si" data-group-id="0600358582-21">#{</span><span class="n">path</span><span class="si" data-group-id="0600358582-21">}</span><span class="s">&quot;</span><span class="p" data-group-id="0600358582-20">]</span><span class="p" data-group-id="0600358582-19">)</span><span class="w">
+    </span><span class="nc">Mix</span><span class="o">.</span><span class="n">shell</span><span class="p" data-group-id="0600358582-22">(</span><span class="p" data-group-id="0600358582-22">)</span><span class="o">.</span><span class="n">info</span><span class="p" data-group-id="0600358582-23">(</span><span class="p" data-group-id="0600358582-24">[</span><span class="s">&quot;Site Rebuilding&quot;</span><span class="p" data-group-id="0600358582-24">]</span><span class="p" data-group-id="0600358582-23">)</span><span class="w">
+    </span><span class="c1"># Currently, we&#39;re just recompiling the entire site</span><span class="w">
+    </span><span class="c1"># TODO: make this fancier based on the path</span><span class="w">
+    </span><span class="nc">System</span><span class="o">.</span><span class="n">cmd</span><span class="p" data-group-id="0600358582-25">(</span><span class="s">&quot;mix&quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="0600358582-26">[</span><span class="s">&quot;site.build&quot;</span><span class="p" data-group-id="0600358582-26">]</span><span class="p" data-group-id="0600358582-25">)</span><span class="w">
+    </span><span class="nc">Mix</span><span class="o">.</span><span class="n">shell</span><span class="p" data-group-id="0600358582-27">(</span><span class="p" data-group-id="0600358582-27">)</span><span class="o">.</span><span class="n">info</span><span class="p" data-group-id="0600358582-28">(</span><span class="p" data-group-id="0600358582-29">[</span><span class="ss">:green</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Site rebuilt&quot;</span><span class="p" data-group-id="0600358582-29">]</span><span class="p" data-group-id="0600358582-28">)</span><span class="w">
+    </span><span class="p" data-group-id="0600358582-30">{</span><span class="ss">:noreply</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="0600358582-30">}</span><span class="w">
+    </span><span class="p" data-group-id="0600358582-31">{</span><span class="ss">:noreply</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="0600358582-31">}</span><span class="w">
+  </span><span class="k" data-group-id="0600358582-17">end</span><span class="w">
 
-  def handle_info(
-        {:file_event, watcher_pid, {_path, _events}},
-        %{watcher_pid: watcher_pid} = state
-      ) do
-    {:noreply, state}
-  end
-end
-</code></pre>
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">handle_info</span><span class="p" data-group-id="0600358582-32">(</span><span class="w">
+        </span><span class="p" data-group-id="0600358582-33">{</span><span class="ss">:file_event</span><span class="p">,</span><span class="w"> </span><span class="n">watcher_pid</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="0600358582-34">{</span><span class="c">_path</span><span class="p">,</span><span class="w"> </span><span class="c">_events</span><span class="p" data-group-id="0600358582-34">}</span><span class="p" data-group-id="0600358582-33">}</span><span class="p">,</span><span class="w">
+        </span><span class="p" data-group-id="0600358582-35">%{</span><span class="ss">watcher_pid</span><span class="p">:</span><span class="w"> </span><span class="n">watcher_pid</span><span class="p" data-group-id="0600358582-35">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="w">
+      </span><span class="p" data-group-id="0600358582-32">)</span><span class="w"> </span><span class="k" data-group-id="0600358582-36">do</span><span class="w">
+    </span><span class="p" data-group-id="0600358582-37">{</span><span class="ss">:noreply</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p" data-group-id="0600358582-37">}</span><span class="w">
+  </span><span class="k" data-group-id="0600358582-36">end</span><span class="w">
+</span><span class="k" data-group-id="0600358582-1">end</span><span class="w">
+</span></code></pre>
 <p>
 I’m planning to get a bit fancier with this, currently I’m just rebuilding the whole site when any file changes. That’s fine for now, but I’d like to get to a point where I could rebuild just one post at a time, for example.</p>
 <p>
 Something else I ran into, you can’t use <code class="inline">Mix.Task.run</code> in the watcher, because the posts are stored in a module attribute and I don’t know how to force a recompile of the module. I think I could use <code class="inline">Code.compile_file</code> but that seems like a problem for another day.</p>
 <p>
 Lastly, we need to start the watcher and the server:</p>
-<pre><code class="elixir">defmodule Personal.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
-  @moduledoc false
+<pre><code class="makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">Personal.Application</span><span class="w"> </span><span class="k" data-group-id="3368412003-1">do</span><span class="w">
+  </span><span class="c1"># See https://hexdocs.pm/elixir/Application.html</span><span class="w">
+  </span><span class="c1"># for more information on OTP Applications</span><span class="w">
+  </span><span class="na">@moduledoc</span><span class="w"> </span><span class="no">false</span><span class="w">
 
-  use Application
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">Application</span><span class="w">
 
-  @impl true
-  def start(_type, _args) do
-    children = [
-      {Bandit, plug: Personal.DevServer},
-      {Personal.Watcher, dirs: [&quot;./lib&quot;, &quot;./posts&quot;]}
-    ]
+  </span><span class="na">@impl</span><span class="w"> </span><span class="no">true</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">start</span><span class="p" data-group-id="3368412003-2">(</span><span class="c">_type</span><span class="p">,</span><span class="w"> </span><span class="c">_args</span><span class="p" data-group-id="3368412003-2">)</span><span class="w"> </span><span class="k" data-group-id="3368412003-3">do</span><span class="w">
+    </span><span class="n">children</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="3368412003-4">[</span><span class="w">
+      </span><span class="p" data-group-id="3368412003-5">{</span><span class="nc">Bandit</span><span class="p">,</span><span class="w"> </span><span class="ss">plug</span><span class="p">:</span><span class="w"> </span><span class="nc">Personal.DevServer</span><span class="p" data-group-id="3368412003-5">}</span><span class="p">,</span><span class="w">
+      </span><span class="p" data-group-id="3368412003-6">{</span><span class="nc">Personal.Watcher</span><span class="p">,</span><span class="w"> </span><span class="ss">dirs</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="3368412003-7">[</span><span class="s">&quot;./lib&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;./posts&quot;</span><span class="p" data-group-id="3368412003-7">]</span><span class="p" data-group-id="3368412003-6">}</span><span class="w">
+    </span><span class="p" data-group-id="3368412003-4">]</span><span class="w">
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: Personal.Supervisor]
-    Supervisor.start_link(children, opts)
-  end
-end</code></pre>
+    </span><span class="c1"># See https://hexdocs.pm/elixir/Supervisor.html</span><span class="w">
+    </span><span class="c1"># for other strategies and supported options</span><span class="w">
+    </span><span class="n">opts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="3368412003-8">[</span><span class="ss">strategy</span><span class="p">:</span><span class="w"> </span><span class="ss">:one_for_one</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="nc">Personal.Supervisor</span><span class="p" data-group-id="3368412003-8">]</span><span class="w">
+    </span><span class="nc">Supervisor</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="3368412003-9">(</span><span class="n">children</span><span class="p">,</span><span class="w"> </span><span class="n">opts</span><span class="p" data-group-id="3368412003-9">)</span><span class="w">
+  </span><span class="k" data-group-id="3368412003-3">end</span><span class="w">
+</span><span class="k" data-group-id="3368412003-1">end</span></code></pre>
 <p>
 That’s it! Now I can run <code class="inline">iex -S mix</code> and have a dev server that watches the filesystem for changes.</p>
 <p>

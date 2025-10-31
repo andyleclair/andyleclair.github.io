@@ -9,8 +9,8 @@ defmodule Mix.Tasks.CopyStatic do
 
     # Ignoring if these exist
     File.mkdir(@output_dir)
-    File.cp_r!Path.join([@output_dir, "assets", "fonts"])
-    File.cp_r!Path.join([@output_dir, "assets", "images"])
+    File.mkdir(Path.join([@output_dir, "assets", "fonts"]))
+    File.mkdir(Path.join([@output_dir, "assets", "images"]))
     File.mkdir(@image_dir)
     File.mkdir(@font_dir)
     File.cp_r!(@font_dir, Path.join([@output_dir, "assets", "fonts"]))

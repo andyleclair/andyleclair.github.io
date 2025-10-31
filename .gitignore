@@ -27,4 +27,4 @@ personal-*.tar
 
 .expert
 
-output/
+output/*

@@ -1,6 +1,6 @@
 %{
   title: "Weekly Listening Oct. 27-31",
-  description: TODO,
+  description: "Music I've enjoyed this week",
   author: "Andy LeClair",
   tags: ["music", "weekly listening"],
   related_listening: "https://www.youtube.com/watch?v=CHsZ_-9442o",

@@ -4,9 +4,24 @@ defmodule Personal do
 
   @site_url Application.compile_env(:personal, :root_url)
 
+  def page(assigns) do
+    ~H"""
+    <.layout pages={@pages}>
+      <:head>
+        <title>{@page.title}</title>
+        <meta name="description" content={@page.description} />
+      </:head>
+      <article class="mx-auto prose sm:prose-sm md:prose-md lg:prose-xl prose-pre:bg-codebg">
+        <h1>{@page.title}</h1>
+        {raw(@page.body)}
+      </article>
+    </.layout>
+    """
+  end
+
   def post(assigns) do
     ~H"""
-    <.layout>
+    <.layout pages={@pages}>
       <:head>
         <title>{@post.title}</title>
         <meta name="description" content={@post.description} />
@@ -22,14 +37,13 @@ defmodule Personal do
     """
   end
 
-  def index(assigns) do
+  def blog(assigns) do
     ~H"""
-    <.layout>
+    <.layout pages={@pages}>
       <:head>
         <title>andyleclair.dev</title>
         <meta name="description" content="Personal website of Andy LeClair" />
       </:head>
-      <h2 class="text-xl">Blog!</h2>
       <ul>
         <li :for={post <- @posts}>
           {post.date} - <a href={post.path}>{post.title}</a>
@@ -39,7 +53,35 @@ defmodule Personal do
     """
   end
 
+  def index(assigns) do
+    ~H"""
+    <.layout pages={@pages}>
+      <:head>
+        <title>Andy LeClair</title>
+        <meta
+          name="description"
+          content="welcome to the personal website of andy leclair, internet wizard"
+        />
+      </:head>
+      <article class="mx-auto prose sm:prose-sm md:prose-md lg:prose-xl prose-pre:bg-codebg">
+        <h2>Welcome!</h2>
+        <h3>You've found my little slice of the dang ol internet</h3>
+        <p></p>
+      </article>
+      <article class="mx-auto prose sm:prose-sm md:prose-md lg:prose-xl prose-pre:bg-codebg">
+        <h3>While you're here, check out my blog</h3>
+        <ul>
+          <li :for={post <- @posts}>
+            {post.date} - <a href={post.path}>{post.title}</a>
+          </li>
+        </ul>
+      </article>
+    </.layout>
+    """
+  end
+
   slot :head
+  attr :pages, :any
 
   def layout(assigns) do
     ~H"""
@@ -55,14 +97,29 @@ defmodule Personal do
 
       <body class="bg-nor-easter text-smurf-blood">
         <div class="flex h-60 min-h-screen flex-col items-center">
-          <header class="bg-bludacris p-10 my-4 lg:mt-10 lg:mb-14">
-            <h1><a href={url()}>andy@andyleclair.dev</a>$><span class="blink">_</span></h1>
+          <header class="my-10">
+            <h1 class="bg-bludacris p-10 my-4 lg:mt-10 lg:mb-14">
+              <a href={url()}>andy@andyleclair.dev</a>$><span class="blink">_</span>
+            </h1>
+
+            <div class="flex flex-row justify-between">
+              <h2><a href="/">Home</a></h2>
+              <h2><a href="/posts/">Blog</a></h2>
+              <h2 :for={page <- @pages}>
+                <a href={"/pages/#{page.id}.html"}>{page.title}</a>
+              </h2>
+            </div>
           </header>
           <main class="flex flex-col mx-auto relative grow min-h-96 flex-1 p-4 justify-items-center">
             {render_slot(@inner_block)}
           </main>
           <footer class="mt-24 bg-bludacris p-4 text-center">
-            © Andy LeClair 2024 | <a href="/atom.xml">Atom</a> | <a href="/feed.xml">RSS</a>
+            © Andy LeClair 2026 | <a href="/atom.xml">Atom</a>
+            | <a href="/feed.xml">RSS</a>
+            |
+            <a href="https://github.com/andyleclair/andyleclair.github.io" target="_blank">
+              Site Source
+            </a>
           </footer>
         </div>
       </body>
@@ -73,10 +130,24 @@ defmodule Personal do
   @output_dir "./output"
   File.mkdir_p!(@output_dir)
 
-  def build() do
-    posts = Personal.Blog.all_posts()
+  def build do
+    File.mkdir_p!(@output_dir <> "/posts")
 
-    render_file("index.html", index(%{posts: posts}))
+    posts = Personal.Blog.all_posts()
+    pages = Personal.Pages.all_pages()
+
+    render_file("index.html", index(%{posts: posts, pages: pages}))
+    render_file("posts/index.html", blog(%{posts: posts, pages: pages}))
+
+    for page <- pages do
+      dir = Path.dirname(page.path)
+
+      if dir != "." do
+        File.mkdir_p!(Path.join([@output_dir, dir]))
+      end
+
+      render_file(page.path, page(%{page: page, pages: pages}))
+    end
 
     for post <- posts do
       dir = Path.dirname(post.path)
@@ -85,7 +156,7 @@ defmodule Personal do
         File.mkdir_p!(Path.join([@output_dir, dir]))
       end
 
-      render_file(post.path, post(%{post: post}))
+      render_file(post.path, post(%{post: post, pages: pages}))
     end
 
     :ok

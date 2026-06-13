@@ -24,7 +24,10 @@ config :tailwind,
 
 config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
 
-config :personal, root_url: "https://andyleclair.dev"
+config :personal,
+  root_url: "https://andyleclair.dev",
+  did: "did:plc:elpdw5nwg3yzxouqzzjqjg43",
+  well_known: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.publication/3mo5adp7hsq2f"
 
 if File.exists?("config/#{config_env()}.exs") do
   import_config("#{config_env()}.exs")

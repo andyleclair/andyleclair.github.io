@@ -132,12 +132,14 @@ defmodule Personal do
 
   def build do
     File.mkdir_p!(@output_dir <> "/posts")
+    File.mkdir_p!(@output_dir <> "/.well-known")
 
     posts = Personal.Blog.all_posts()
     pages = Personal.Pages.all_pages()
 
     render_file("index.html", index(%{posts: posts, pages: pages}))
     render_file("posts/index.html", blog(%{posts: posts, pages: pages}))
+    render_text(".well-known/site.standard.publication", well_known())
 
     for page <- pages do
       dir = Path.dirname(page.path)
@@ -162,10 +164,19 @@ defmodule Personal do
     :ok
   end
 
+  def well_known do
+    Application.get_env(:personal, :well_known)
+  end
+
   def render_file(path, rendered) do
     safe = Phoenix.HTML.Safe.to_iodata(rendered)
     output = Path.join([@output_dir, path])
     File.write!(output, safe)
+  end
+
+  def render_text(path, text) do
+    output = Path.join([@output_dir, path])
+    File.write!(output, text)
   end
 
   @doc """

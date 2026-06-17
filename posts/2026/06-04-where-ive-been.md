@@ -1,11 +1,11 @@
 %{
   description: "Summary of the past 6 or so months",
-  author: "Andy LeClair",
   title: "Where I've Been",
+  author: "Andy LeClair",
+  tags: ["personal", "meta"],
   published_at: "2026-06-04T04:20:00Z",
   related_listening: "https://www.youtube.com/watch?v=P6bse2-17HM&list=PL3ZOG5V0OqAaz1LjRgAgpDzUiR6b99hM2",
-  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moha2q2skgt7",
-  tags: ["personal", "meta"]
+  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moiyhat5pwsr"
 }
 ---
 

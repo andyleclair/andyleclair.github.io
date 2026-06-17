@@ -1,11 +1,11 @@
 %{
   description: "About this site",
-  author: "Andy LeClair",
   title: "README",
+  author: "Andy LeClair",
+  tags: ["hello"],
   published_at: "2024-08-28T04:20:00Z",
   related_listening: "https://www.youtube.com/watch?v=9q4mVEcedSo",
-  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moha2rvdvfde",
-  tags: ["hello"]
+  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moiyhbkhq27v"
 }
 ---
 

@@ -1,11 +1,11 @@
 %{
   description: "I can't believe it's not 1997",
-  author: "Andy LeClair",
   title: "Review: Stalefish - It's All Down Here from Hill",
+  author: "Andy LeClair",
+  tags: ["music", "review", "constant_rotation"],
   published_at: "2025-05-14T04:20:00Z",
   related_listening: "<https://stalefishhhhh.bandcamp.com/album/its-all-down-here-from-hill>",
-  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moha2qrahexr",
-  tags: ["music", "review", "constant_rotation"]
+  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moiyhb3nuyhb"
 }
 ---
 

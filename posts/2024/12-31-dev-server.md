@@ -1,11 +1,11 @@
 %{
   description: "Adding a development server",
-  author: "Andy LeClair",
   title: "Dev Server",
+  author: "Andy LeClair",
+  tags: ["elixir", "meta"],
   published_at: "2024-12-31T04:20:00Z",
   related_listening: "https://www.youtube.com/watch?v=SJnfdEX0QWk",
-  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moha2qynvqjs",
-  tags: ["elixir", "meta"]
+  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moiyhb7qyh2v"
 }
 ---
 

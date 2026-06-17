@@ -86,7 +86,8 @@ defmodule Personal.StandardSite do
       site: well_known(),
       title: title,
       description: description,
-      path: path,
+      # per the spec this should start with a /
+      path: "/" <> path,
       publishedAt: published_at,
       tags: tags
     }

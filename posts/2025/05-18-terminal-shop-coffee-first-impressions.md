@@ -1,11 +1,11 @@
 %{
   description: "is this what a meme tastes like?",
-  author: "Andy LeClair",
   title: "terminal.shop coffee first impressions",
+  author: "Andy LeClair",
+  tags: ["coffee", "espresso"],
   published_at: "2025-05-18T04:20:00Z",
   related_listening: "https://www.youtube.com/watch?v=WCpiJpPs_ZQ",
-  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moha2qngu62g",
-  tags: ["coffee", "espresso"]
+  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moiyhb2cjio5"
 }
 ---
 

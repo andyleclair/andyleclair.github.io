@@ -1,11 +1,11 @@
 %{
   description: "Avoiding N+1 queries with Ecto's preload",
-  author: "Andy LeClair",
   title: "How To Do A Preload Good",
+  author: "Andy LeClair",
+  tags: ["elixir", "ecto"],
   published_at: "2024-11-15T04:20:00Z",
   related_listening: "https://www.youtube.com/watch?v=nhWlJLP6QyM",
-  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moha2rat7d3o",
-  tags: ["elixir", "ecto"]
+  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moiyhbcwss3a"
 }
 ---
 

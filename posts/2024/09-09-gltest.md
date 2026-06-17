@@ -1,11 +1,11 @@
 %{
   description: "First steps with OpenGL in Elixir",
-  author: "Andy LeClair",
   title: "GLtest",
+  author: "Andy LeClair",
+  tags: ["elixir", "opengl", "wxwidgets", "graphics"],
   published_at: "2024-09-09T04:20:00Z",
   related_listening: "https://www.youtube.com/watch?v=7ny2t1I6aTo",
-  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moha2rre3phe",
-  tags: ["elixir", "opengl", "wxwidgets", "graphics"]
+  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moiyhbj2x2vq"
 }
 ---
 

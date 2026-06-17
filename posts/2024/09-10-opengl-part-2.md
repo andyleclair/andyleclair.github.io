@@ -1,11 +1,11 @@
 %{
   description: "Drawing a triangle",
-  author: "Andy LeClair",
   title: "OpenGL Part 2",
+  author: "Andy LeClair",
+  tags: ["elixir", "opengl", "wxwidgets", "graphics"],
   published_at: "2024-09-10T04:20:00Z",
   related_listening: "https://www.youtube.com/watch?v=tDd3p-xn7_U",
-  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moha2rnhe2ca",
-  tags: ["elixir", "opengl", "wxwidgets", "graphics"]
+  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moiyhbhoahaw"
 }
 ---
 

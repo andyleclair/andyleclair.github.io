@@ -1,11 +1,11 @@
 %{
   description: "My first steps with Bevy ECS",
-  author: "Andy LeClair",
   title: "First Game!",
+  author: "Andy LeClair",
+  tags: ["rust", "bevy"],
   published_at: "2025-08-11T04:20:00Z",
   related_listening: "https://www.youtube.com/watch?v=yLnkVKJoL-4",
-  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moha2qk2g3gg",
-  tags: ["rust", "bevy"]
+  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moiyhaycrqkf"
 }
 ---
 

@@ -10,6 +10,9 @@ defmodule Personal do
       <:head>
         <title>{@page.title}</title>
         <meta name="description" content={@page.description} />
+        <meta property="og:title" content={@page.title} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={url(@page.path)} />
       </:head>
       <article class="mx-auto prose sm:prose-sm md:prose-md lg:prose-xl prose-pre:bg-codebg">
         <h1>{@page.title}</h1>
@@ -25,6 +28,10 @@ defmodule Personal do
       <:head>
         <title>{@post.title}</title>
         <meta name="description" content={@post.description} />
+        <meta property="og:title" content={@post.title} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={url(@post.path)} />
+        <meta property="og:image" content={@post.og_image_path} />
       </:head>
       <article class="mx-auto prose sm:prose-sm md:prose-md lg:prose-xl prose-pre:bg-codebg">
         <h1>{@post.title}</h1>
@@ -43,6 +50,11 @@ defmodule Personal do
       <:head>
         <title>andyleclair.dev</title>
         <meta name="description" content="Personal website of Andy LeClair" />
+        <meta property="og:title" content="andy leclair dot dev" />
+        <meta property="og:description" content="Personal website of Andy LeClair" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={url()} />
+        <meta property="og:image" content="assets/images/og/main_header.png" />
       </:head>
       <ul>
         <li :for={post <- @posts}>
@@ -62,6 +74,14 @@ defmodule Personal do
           name="description"
           content="welcome to the personal website of andy leclair, internet wizard"
         />
+        <meta property="og:title" content="andy leclair dot dev" />
+        <meta
+          property="og:description"
+          content="welcome to the personal website of andy leclair, internet wizard"
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={url()} />
+        <meta property="og:image" content="assets/images/og/main_header.png" />
       </:head>
       <article class="mx-auto prose sm:prose-sm md:prose-md lg:prose-xl prose-pre:bg-codebg">
         <h2>Welcome!</h2>
@@ -90,6 +110,10 @@ defmodule Personal do
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+          rel="site.standard.publication"
+          href={Application.get_env(:personal, :well_known)}
+        />
         <link rel="stylesheet" href="/assets/app.css" />
         <script type="text/javascript" src="/assets/app.js" />
         {render_slot(@head)}
@@ -151,6 +175,24 @@ defmodule Personal do
       render_file(page.path, page(%{page: page, pages: pages}))
     end
 
+    {:ok, client} =
+      Atex.XRPC.LoginClient.login(
+        "https://bsky.social",
+        Application.get_env(:personal, :at_handle),
+        Application.get_env(:personal, :app_password)
+      )
+
+    {:ok, resp, client} =
+      Atex.XRPC.get(client, %Com.Atproto.Repo.ListRecords{
+        params: %Com.Atproto.Repo.ListRecords.Params{
+          collection: "site.standard.document",
+          repo: "did:plc:elpdw5nwg3yzxouqzzjqjg43"
+        }
+      })
+
+    # We can see if we've already published a post by matching the paths
+    post_documents = resp.body.records |> Enum.map(& &1["value"]) |> Map.new(&{&1["path"], &1})
+
     for post <- posts do
       dir = Path.dirname(post.path)
 
@@ -158,7 +200,14 @@ defmodule Personal do
         File.mkdir_p!(Path.join([@output_dir, dir]))
       end
 
+      Personal.Opengraph.generate_image(post)
+
       render_file(post.path, post(%{post: post, pages: pages}))
+
+      # TODO: Set `updatedAt` here at some point?
+      if !Map.has_key?(post_documents, post.path) do
+        Personal.StandardSite.publish_document(client, post)
+      end
     end
 
     :ok

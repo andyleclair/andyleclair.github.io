@@ -6,14 +6,14 @@ defmodule Mix.Tasks.NewPost do
 
     title = get_title()
     url = title |> String.downcase() |> String.replace("'", "") |> String.replace(~r/\W+/, "-")
+    description = get_description()
     tags = get_tags()
     related_listening = get_related_listening()
-    description = get_description()
 
     post_body = """
     %{
       title: "#{title}",
-      description: #{description},
+      description: "#{description}",
       author: "Andy LeClair",
       tags: #{inspect(tags)},
       related_listening: "#{related_listening}",

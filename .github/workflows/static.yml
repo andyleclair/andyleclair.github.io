@@ -50,7 +50,7 @@ jobs:
             v1-${{ runner.os }}-mix-
       - run: mix deps.get
       # Build the site
-      - run: mix site.build
+      - run: MIX_ENV=prod mix site.build
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

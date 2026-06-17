@@ -11,6 +11,7 @@ defmodule Mix.Tasks.CopyStatic do
     File.mkdir(@output_dir)
     File.mkdir_p(Path.join([@output_dir, "assets", "fonts"]))
     File.mkdir_p(Path.join([@output_dir, "assets", "images"]))
+    File.mkdir_p(Path.join([@output_dir, "assets", "images", "og"]))
     File.mkdir(@image_dir)
     File.mkdir(@font_dir)
     File.cp_r!(@font_dir, Path.join([@output_dir, "assets", "fonts"]))

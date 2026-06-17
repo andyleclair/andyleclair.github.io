@@ -25,6 +25,8 @@ config :tailwind,
 config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
 
 config :personal,
+  env: config_env(),
+  at_handle: "andyleclair.dev",
   root_url: "https://andyleclair.dev",
   did: "did:plc:elpdw5nwg3yzxouqzzjqjg43",
   well_known: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.publication/3mo5adp7hsq2f"

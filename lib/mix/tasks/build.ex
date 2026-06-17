@@ -3,6 +3,9 @@ defmodule Mix.Tasks.Build do
 
   @impl Mix.Task
   def run(_args) do
+    Application.ensure_all_started(:personal)
+    Application.ensure_all_started(:req)
+
     {micro, :ok} =
       :timer.tc(fn ->
         Personal.build()

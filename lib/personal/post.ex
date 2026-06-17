@@ -1,5 +1,5 @@
 defmodule Personal.Post do
-  @enforce_keys [
+  @fields [
     :id,
     :author,
     :title,
@@ -8,9 +8,11 @@ defmodule Personal.Post do
     :tags,
     :date,
     :path,
+    :og_image_path,
     :related_listening
   ]
-  defstruct [:id, :author, :title, :body, :description, :tags, :date, :path, :related_listening]
+  @enforce_keys @fields
+  defstruct @fields
 
   def build(filename, attrs, body) do
     path = Path.rootname(filename)
@@ -20,6 +22,11 @@ defmodule Personal.Post do
     month = String.pad_leading(month, 2, "0")
     day = String.pad_leading(day, 2, "0")
     date = Date.from_iso8601!("#{year}-#{month}-#{day}")
-    struct!(__MODULE__, [id: id, date: date, body: body, path: path] ++ Map.to_list(attrs))
+    og_path = Path.join([File.cwd!(), "assets", "images", "og", Path.rootname(path)]) <> ".png"
+
+    struct!(
+      __MODULE__,
+      [id: id, date: date, body: body, path: path, og_image_path: og_path] ++ Map.to_list(attrs)
+    )
   end
 end

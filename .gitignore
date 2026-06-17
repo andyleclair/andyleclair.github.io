@@ -28,3 +28,9 @@ personal-*.tar
 .expert
 
 output/*
+
+/config/dev.secret.exs
+
+/assets/images/og/posts
+
+/priv/dets

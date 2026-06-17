@@ -114,6 +114,7 @@ defmodule Personal do
           rel="site.standard.publication"
           href={Application.get_env(:personal, :well_known)}
         />
+        <meta property="og:site_name" content="andy leclair dot dev" />
         <link rel="stylesheet" href="/assets/app.css" />
         <script type="text/javascript" src="/assets/app.js" />
         {render_slot(@head)}

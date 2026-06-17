@@ -1,9 +1,11 @@
 %{
-  title: "Ray Tracing In Several Weekends",
   description: "Notes on building a ray tracer in Coalton",
   author: "Andy LeClair",
-  tags: ["coalton", "lisp", "graphics"],
+  title: "Ray Tracing In Several Weekends",
+  published_at: "2026-06-11T04:20:00Z",
   related_listening: "https://www.youtube.com/watch?v=g9Oke7osOYE",
+  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moha2pxanuwd",
+  tags: ["coalton", "lisp", "graphics"]
 }
 ---
 

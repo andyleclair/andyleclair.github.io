@@ -30,8 +30,9 @@ defmodule Personal do
         <meta name="description" content={@post.description} />
         <meta property="og:title" content={@post.title} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={url(@post.path)} />
+        <meta property="og:url" content={url(@post.html_path)} />
         <meta property="og:image" content={url(@post.og_image_path)} />
+        <link rel="site.standard.document" href={@post.standard_site_document} />
       </:head>
       <article class="mx-auto prose sm:prose-sm md:prose-md lg:prose-xl prose-pre:bg-codebg">
         <h1>{@post.title}</h1>
@@ -58,7 +59,7 @@ defmodule Personal do
       </:head>
       <ul>
         <li :for={post <- @posts}>
-          {post.date} - <a href={post.path}>{post.title}</a>
+          {post.date} - <a href={post.html_path}>{post.title}</a>
         </li>
       </ul>
     </.layout>
@@ -92,7 +93,7 @@ defmodule Personal do
         <h3>While you're here, check out my blog</h3>
         <ul>
           <li :for={post <- @posts}>
-            {post.date} - <a href={post.path}>{post.title}</a>
+            {post.date} - <a href={post.html_path}>{post.title}</a>
           </li>
         </ul>
       </article>
@@ -176,26 +177,8 @@ defmodule Personal do
       render_file(page.path, page(%{page: page, pages: pages}))
     end
 
-    {:ok, client} =
-      Atex.XRPC.LoginClient.login(
-        "https://bsky.social",
-        Application.get_env(:personal, :at_handle),
-        Application.get_env(:personal, :app_password)
-      )
-
-    {:ok, resp, client} =
-      Atex.XRPC.get(client, %Com.Atproto.Repo.ListRecords{
-        params: %Com.Atproto.Repo.ListRecords.Params{
-          collection: "site.standard.document",
-          repo: "did:plc:elpdw5nwg3yzxouqzzjqjg43"
-        }
-      })
-
-    # We can see if we've already published a post by matching the paths
-    post_documents = resp.body.records |> Enum.map(& &1["value"]) |> Map.new(&{&1["path"], &1})
-
     for post <- posts do
-      dir = Path.dirname(post.path)
+      dir = Path.dirname(post.html_path)
 
       if dir != "." do
         File.mkdir_p!(Path.join([@output_dir, dir]))
@@ -203,12 +186,7 @@ defmodule Personal do
 
       Personal.Opengraph.generate_image(post)
 
-      render_file(post.path, post(%{post: post, pages: pages}))
-
-      # TODO: Set `updatedAt` here at some point?
-      if !Map.has_key?(post_documents, post.path) do
-        Personal.StandardSite.publish_document(client, post)
-      end
+      render_file(post.html_path, post(%{post: post, pages: pages}))
     end
 
     :ok

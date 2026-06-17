@@ -1,5 +1,7 @@
 #import "@preview/conch:0.1.0": system, terminal
 
+#set page(margin: 0pt)
+
 #let _win-btn(content, f, fg, bg: none) = box(
   fill: bg,
   width: 32pt,

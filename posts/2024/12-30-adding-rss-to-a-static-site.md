@@ -1,9 +1,11 @@
 %{
-  title: "Adding RSS to a static site",
   description: "Adding RSS and Atom feeds to this site",
   author: "Andy LeClair",
-  tags: ["elixir", "meta"],
+  title: "Adding RSS to a static site",
+  published_at: "2024-12-30T04:20:00Z",
   related_listening: "https://www.youtube.com/watch?v=rVpR_WTRhmc",
+  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moha2r4mg2up",
+  tags: ["elixir", "meta"]
 }
 ---
 

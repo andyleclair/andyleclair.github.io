@@ -10,7 +10,7 @@ defmodule Personal.Opengraph do
   def generate_image(%Post{
         title: title,
         description: description,
-        path: path,
+        html_path: path,
         og_image_path: og_image_path
       }) do
     ascii_big_text = Figlet.string("NEW POST!", font: "figlet.js/ANSI Shadow.flf")

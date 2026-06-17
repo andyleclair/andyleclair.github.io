@@ -1,9 +1,11 @@
 %{
-  title: "Weekly Listening Nov. 1-7",
   description: "Music I've enjoyed this week",
   author: "Andy LeClair",
-  tags: ["music", "weekly listening"],
+  title: "Weekly Listening Nov. 1-7",
+  published_at: "2025-11-07T04:20:00Z",
   related_listening: "https://theyareguttingabodyofwater.bandcamp.com/album/lotto",
+  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moha2q6ffcc4",
+  tags: ["music", "weekly listening"]
 }
 ---
 

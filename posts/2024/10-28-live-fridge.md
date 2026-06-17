@@ -1,9 +1,11 @@
 %{
-  title: "Live Fridge",
   description: "My take on an internet fridge magnet poetry experience using Elixir, Ash, and LiveView.",
   author: "Andy LeClair",
-  tags: ["elixir", "ash", "liveview"],
+  title: "Live Fridge",
+  published_at: "2024-10-28T04:20:00Z",
   related_listening: "https://open.spotify.com/playlist/0hTDYi34toP4tTE8rCAkgY?si=671fa097213c4103",
+  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moha2rft5tid",
+  tags: ["elixir", "ash", "liveview"]
 }
 ---
 I’ve spent some time over the past few weeks putting this little project together. It’s a realtime multiplayer fridge magnet poetry experience built with LiveView, Ash and a little JS (just hooks!).

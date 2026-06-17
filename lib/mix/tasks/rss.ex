@@ -40,8 +40,8 @@ defmodule Mix.Tasks.Rss do
       <title>#{post.title}</title>
       <description>#{post.description}</description>
       <pubDate>#{rfc_822(post.date)}</pubDate>
-      <link>#{url(post.path)}</link>
-      <guid isPermaLink="true">#{url(post.path)}</guid>
+      <link>#{url(post.html_path)}</link>
+      <guid isPermaLink="true">#{url(post.html_path)}</guid>
     </item>
     """
   end

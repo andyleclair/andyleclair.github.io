@@ -45,8 +45,8 @@ defmodule Mix.Tasks.Atom do
     """
     <entry>
       <title>#{post.title}</title>
-      <link href="#{url(post.path)}" />
-      <id>#{url(post.path)}</id>
+      <link href="#{url(post.html_path)}" />
+      <id>#{url(post.html_path)}</id>
       <updated>#{rfc_3339(post.date)}</updated>
       <summary>#{post.description}</summary>
     </entry>

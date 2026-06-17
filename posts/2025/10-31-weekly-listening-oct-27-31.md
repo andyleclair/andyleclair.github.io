@@ -1,9 +1,11 @@
 %{
-  title: "Weekly Listening Oct. 27-31",
   description: "Music I've enjoyed this week",
   author: "Andy LeClair",
-  tags: ["music", "weekly listening"],
+  title: "Weekly Listening Oct. 27-31",
+  published_at: "2025-10-31T04:20:00Z",
   related_listening: "https://www.youtube.com/watch?v=CHsZ_-9442o",
+  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moha2qg7bxeb",
+  tags: ["music", "weekly listening"]
 }
 ---
 

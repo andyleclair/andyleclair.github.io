@@ -1,9 +1,11 @@
 %{
-  title: "Hello world!",
-  author: "Andy LeClair",
-  tags: ~w(hello),
   description: "The Start of Something",
-  related_listening: "https://www.youtube.com/watch?v=wVrSXeRXSWE"
+  author: "Andy LeClair",
+  title: "Hello world!",
+  published_at: "2024-08-27T04:20:00Z",
+  related_listening: "https://www.youtube.com/watch?v=wVrSXeRXSWE",
+  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moha2rz5bkvq",
+  tags: ["hello"]
 }
 ---
 

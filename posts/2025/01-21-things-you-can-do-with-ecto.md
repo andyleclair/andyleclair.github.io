@@ -1,9 +1,11 @@
 %{
-  title: "Things You Can Do With Ecto",
   description: "Neat tricks I've learned while working with Ecto",
   author: "Andy LeClair",
-  tags: ["elixir", "ecto"],
+  title: "Things You Can Do With Ecto",
+  published_at: "2025-01-21T04:20:00Z",
   related_listening: "https://www.youtube.com/watch?v=SJnfdEX0QWk",
+  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moha2quuirfz",
+  tags: ["elixir", "ecto"]
 }
 ---
 

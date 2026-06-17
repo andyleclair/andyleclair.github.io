@@ -1,9 +1,11 @@
 %{
-  title: "OpenGL Part 3",
   description: "Layering shapes, displaying FPS",
   author: "Andy LeClair",
-  tags: ["elixir", "opengl", "wxwidgets", "graphics"],
+  title: "OpenGL Part 3",
+  published_at: "2024-09-11T04:20:00Z",
   related_listening: "https://www.youtube.com/watch?v=bwsjQbf0czc",
+  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moha2rjsi6jq",
+  tags: ["elixir", "opengl", "wxwidgets", "graphics"]
 }
 ---
 

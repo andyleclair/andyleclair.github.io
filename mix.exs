@@ -27,7 +27,7 @@ defmodule Personal.MixProject do
       {:esbuild, "~> 0.5"},
       {:makeup_elixir, ">= 0.0.0"},
       {:makeup_erlang, ">= 0.0.0"},
-      {:nimble_publisher, "~> 1.1.0"},
+      {:nimble_publisher, "~> 2.0"},
       {:phoenix, "~> 1.7"},
       {:bandit, "~> 1.0"},
       {:phoenix_live_view, "~> 1.0"},

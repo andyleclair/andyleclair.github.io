@@ -1,5 +1,5 @@
 defmodule Personal.Post do
-  @fields [
+  @required [
     :id,
     :author,
     :title,
@@ -7,12 +7,18 @@ defmodule Personal.Post do
     :description,
     :tags,
     :date,
-    :path,
+    :md_path,
+    :html_path,
     :og_image_path,
     :related_listening
   ]
-  @enforce_keys @fields
-  defstruct @fields
+  @optional [
+    :published_at,
+    :standard_site_document
+  ]
+
+  @enforce_keys @required
+  defstruct @required ++ @optional
 
   def build(filename, attrs, body) do
     path = Path.rootname(filename)
@@ -26,7 +32,36 @@ defmodule Personal.Post do
 
     struct!(
       __MODULE__,
-      [id: id, date: date, body: body, path: path, og_image_path: og_path] ++ Map.to_list(attrs)
+      [id: id, date: date, body: body, html_path: path, og_image_path: og_path, md_path: filename] ++
+        Map.to_list(attrs)
     )
+  end
+
+  @doc """
+  Update the post file on disk
+  """
+  def write(%__MODULE__{md_path: path} = post) do
+    frontmatter =
+      post
+      |> Map.from_struct()
+      |> Map.take([
+        :title,
+        :author,
+        :tags,
+        :description,
+        :related_listening,
+        :standard_site_document,
+        :published_at
+      ])
+      |> inspect(pretty: true)
+
+    # Extract the markdown body
+    [_, md] = File.read!(path) |> String.split("---")
+
+    File.open!(path, [:write], fn file ->
+      IO.binwrite(file, frontmatter)
+      IO.binwrite(file, "\n---")
+      IO.binwrite(file, md)
+    end)
   end
 end

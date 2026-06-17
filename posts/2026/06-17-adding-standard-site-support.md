@@ -1,9 +1,11 @@
 %{
-  title: "Adding Standard.Site Support",
   description: "How I added standard.site support to this lil ol blog",
   author: "Andy LeClair",
-  tags: ["elixir", "atproto", "meta", "typst"],
+  title: "Adding Standard.Site Support",
+  published_at: "2026-06-17T04:20:00Z",
   related_listening: "https://www.youtube.com/watch?v=rtG4FfXB7zk",
+  standard_site_document: "at://did:plc:elpdw5nwg3yzxouqzzjqjg43/site.standard.document/3moha2pqv2ddy",
+  tags: ["elixir", "atproto", "meta", "typst"]
 }
 ---
 

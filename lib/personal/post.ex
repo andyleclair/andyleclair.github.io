@@ -22,7 +22,7 @@ defmodule Personal.Post do
     month = String.pad_leading(month, 2, "0")
     day = String.pad_leading(day, 2, "0")
     date = Date.from_iso8601!("#{year}-#{month}-#{day}")
-    og_path = Path.join([Personal.url(), "assets", "images", "og", Path.rootname(path)]) <> ".png"
+    og_path = Path.join(["assets", "images", "og", Path.rootname(path)]) <> ".png"
 
     struct!(
       __MODULE__,

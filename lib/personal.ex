@@ -54,7 +54,7 @@ defmodule Personal do
         <meta property="og:description" content="Personal website of Andy LeClair" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={url()} />
-        <meta property="og:image" content="assets/images/og/main_header.png" />
+        <meta property="og:image" content="/assets/images/og/main_header.png" />
       </:head>
       <ul>
         <li :for={post <- @posts}>
@@ -81,7 +81,7 @@ defmodule Personal do
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={url()} />
-        <meta property="og:image" content="assets/images/og/main_header.png" />
+        <meta property="og:image" content="/assets/images/og/main_header.png" />
       </:head>
       <article class="mx-auto prose sm:prose-sm md:prose-md lg:prose-xl prose-pre:bg-codebg">
         <h2>Welcome!</h2>

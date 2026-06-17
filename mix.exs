@@ -47,10 +47,10 @@ defmodule Personal.MixProject do
   defp aliases() do
     [
       "site.build": [
+        "copy_static",
         "build",
         "rss",
         "atom",
-        "copy_static",
         "tailwind default --minify",
         "esbuild default --minify"
       ]

@@ -8,7 +8,7 @@
 ---
 
 ### 
-As a ~38 year old~ Bluesky user and distributed systems nerd, I'm interested in [AT Proto](https://atproto.com/) and I thought it'd be a fun lark to add [Standard.Site](https://standard.site/) support to my crappy little handmade blog engine. How hard could it be?? Let's find out... together!
+As a ~~38 year old~~ Bluesky user and distributed systems nerd, I'm interested in [AT Proto](https://atproto.com/) and I thought it'd be a fun lark to add [Standard.Site](https://standard.site/) support to my crappy little handmade blog engine. How hard could it be?? Let's find out... together!
 
 [Mat Marquis](https://wil.to/) has a [great](https://wil.to/posts/standard-site/) [series](https://wil.to/posts/implementing-standard-site/) on how he implemented Standard.Site (we won't be abbreviating that) on his blog that I've used as a starting point. However, this is a static site, written in GLORIOUS ELIXIR therefore we must make a few detours.
 

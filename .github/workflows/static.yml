@@ -53,6 +53,8 @@ jobs:
       - run: MIX_ENV=prod mix site.build
         env:
           APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+      - run: ls assets/images/og/posts
+      - run: ls 
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

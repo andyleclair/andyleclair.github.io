@@ -7,14 +7,24 @@ defmodule Personal.Application do
 
   @impl true
   def start(_type, _args) do
-    children = [
-      {Bandit, plug: Personal.DevServer},
-      {Personal.Watcher, dirs: ["./lib", "./posts"]}
-    ]
+    children =
+      [
+        {Bandit, plug: Personal.DevServer},
+        watcher()
+      ]
+      |> List.flatten()
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Personal.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  def watcher do
+    if Personal.env() == :dev do
+      {Personal.Watcher, dirs: ["./lib", "./posts"]}
+    else
+      []
+    end
   end
 end

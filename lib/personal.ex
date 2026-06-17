@@ -242,4 +242,8 @@ defmodule Personal do
   def rfc_822(date) do
     Calendar.strftime(date, "%a, %d %b %Y 00:00:00 EST")
   end
+
+  def env do
+    Application.get_env(:personal, :env)
+  end
 end

@@ -44,6 +44,6 @@ defmodule Personal.StandardSite do
   end
 
   def enabled? do
-    Application.get_env(:personal, :env) == :prod
+    Personal.env() == :prod
   end
 end

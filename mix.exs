@@ -34,7 +34,7 @@ defmodule Personal.MixProject do
       {:tailwind, "~> 0.2"},
       {:tzdata, "~> 1.1"},
       {:plug_static_index_html, "~> 1.0"},
-      {:file_system, "~> 1.0", only: :dev},
+      {:file_system, "~> 1.0"},
       {:atex, git: "https://tangled.org/comet.sh/atex", override: true},
       {:atex_atproto, "~> 0.1"},
       {:atex_bsky, "~> 0.1"},

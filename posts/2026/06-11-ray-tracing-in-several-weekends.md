@@ -9,7 +9,7 @@
 }
 ---
 
-![some raytraced spheres](assets/images/06-11-raytracer-out.png)
+![some raytraced spheres](/assets/images/06-11-raytracer-out.png)
 
 As a fun project, I've been working my way through [Ray Tracing In One Weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html) in [Coalton](https://coalton-lang.github.io). My code for this project is available here: [source](https://tangled.org/andyleclair.dev/ray).
 

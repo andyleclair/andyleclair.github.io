@@ -87,7 +87,7 @@ defmodule Personal.StandardSite do
       title: title,
       description: description,
       # per the spec this should start with a /
-      path: "/" <> path,
+      path: path,
       publishedAt: published_at,
       tags: tags
     }

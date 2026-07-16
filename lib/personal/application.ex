@@ -22,7 +22,7 @@ defmodule Personal.Application do
 
   def watcher do
     if Personal.env() == :dev do
-      {Personal.Watcher, dirs: ["./lib", "./posts"]}
+      {Personal.Watcher, dirs: ["./assets/css", "./lib", "./posts"]}
     else
       []
     end

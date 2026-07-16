@@ -38,6 +38,10 @@ body {
 
 
 /* Makeup */
+pre {
+  line-height: 1 !important;
+}
+
 .makeup .hll {background-color: #4f424c}
 .makeup {color: #e7e9db; background-color: #2f1e2e}.makeup .unselectable {
   -webkit-touch-callout: none;

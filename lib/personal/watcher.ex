@@ -1,5 +1,4 @@
 defmodule Personal.Watcher do
-  require Logger
   use GenServer
 
   def start_link(args) do

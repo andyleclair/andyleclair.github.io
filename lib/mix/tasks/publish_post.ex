@@ -5,6 +5,7 @@ defmodule Mix.Tasks.PublishPost do
 
   @impl Mix.Task
   def run(_args) do
+    Application.ensure_all_started(:req)
     {:ok, drafts} = File.ls("./drafts")
 
     indexed_drafts = Enum.with_index(drafts, 1) |> Enum.map(fn {path, i} -> "#{i}. #{path}" end)

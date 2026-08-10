@@ -82,6 +82,13 @@ defmodule Personal.StandardSite do
       }) do
     published_at = date |> DateTime.new!(~T[04:20:00]) |> DateTime.to_iso8601()
 
+    path =
+      if String.starts_with?(path, "/./") do
+        String.replace(path, "/./", "/")
+      else
+        path
+      end
+
     %Document{
       site: well_known(),
       title: title,

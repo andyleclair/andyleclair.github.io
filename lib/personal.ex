@@ -84,15 +84,15 @@ defmodule Personal do
         <meta property="og:url" content={url()} />
         <meta property="og:image" content={url("/assets/images/og/main_header.png")} />
       </:head>
+
       <article class="mx-auto prose sm:prose-sm md:prose-md lg:prose-xl prose-pre:bg-codebg">
         <h2>Welcome!</h2>
-        <h3>You've found my little slice of the dang ol internet</h3>
-        <p></p>
+        <p>You've found my personal little slice of the dang ol internet</p>
       </article>
-      <article class="mx-auto prose sm:prose-sm md:prose-md lg:prose-xl prose-pre:bg-codebg">
-        <h3>While you're here, check out my blog</h3>
+      <article class="mt-4">
+        <h3>While you're here, check out my <a href="/blog">blog</a>. Here are some recent posts:</h3>
         <ul>
-          <li :for={post <- @posts}>
+          <li :for={post <- Enum.take(@posts, 3)}>
             {post.date} - <a href={post.html_path}>{post.title}</a>
           </li>
         </ul>
